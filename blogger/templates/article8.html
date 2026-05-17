@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+   <link rel="icon" type="image/png" href="/static/favicon.png">
+
+<meta charset="utf-8">
+<title>How PDF Files Work Internally: Objects, Streams, XRef Tables, Fonts & Encoding — SaveFaste</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<meta name="description" content="A deep technical breakdown of how PDF files are structured internally — objects, streams, cross-reference tables, page trees, fonts, encodings, rendering logic, encryption, digital signatures, and troubleshooting damaged PDFs. Includes real examples, diagrams, and developer insights.">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://www.savefaste.com/blog/how-pdf-works-structure">
+
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:title" content="How PDF Files Work Internally: A Complete Technical Guide — SaveFaste">
+<meta property="og:description" content="Understand the full internal architecture of PDF files: objects, streams, xref tables, fonts, encodings, encryption, and repair techniques. A must-read for developers, security analysts, and PDF tool creators.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.savefaste.com/blog/how-pdf-works-structure">
+<meta property="og:image" content="https://www.savefaste.com/static/blog/pdf-structure-guide.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How PDF Files Are Structured Internally — Deep Technical Guide">
+<meta name="twitter:description" content="Detailed analysis of PDF architecture: objects, streams, xref tables, fonts, encoding, and encryption. With examples and troubleshooting tips.">
+<meta name="twitter:image" content="https://www.savefaste.com/static/blog/pdf-structure-guide.png">
+
+<!-- Keywords (اختيارية ولكن مفيدة لمقالات تقنية طويلة) -->
+<meta name="keywords" content="PDF structure, PDF internals, PDF objects, PDF streams, xref table, pdf encoding, pdf fonts, pdf encryption, pdf repair, pdf architecture, how PDF works">
+
+<!-- Article Schema (SEO Boost قوي جداً) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "How PDF Files Work Internally: Objects, Streams, XRef, Fonts & Encoding",
+  "description": "A deep technical breakdown of PDF internals including objects, streams, xref tables, fonts, encodings, encryption, page trees, content streams, and repairing corrupted PDFs.",
+  "author": {
+    "@type": "Organization",
+    "name": "SaveFaste"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SaveFaste",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.savefaste.com/static/favicon.png"
+    }
+  },
+  "url": "https://www.savefaste.com/blog/how-pdf-works-structure",
+  "image": "https://www.savefaste.com/static/blog/pdf-structure-guide.png",
+  "datePublished": "2025-01-01",
+  "dateModified": "2025-01-01"
+}
+</script>
+
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.6;color:#111;margin:0;padding:0;background:#fff}
+    .container{max-width:980px;margin:32px auto;padding:20px}
+    header{margin-bottom:18px}
+    h1{font-size:28px;margin:8px 0}
+    h2{font-size:20px;margin:18px 0 8px}
+    h3{font-size:16px;margin:12px 0}
+    p{margin:10px 0}
+    pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow:auto}
+    code{font-family:monospace;background:#f3f4f6;padding:2px 4px;border-radius:4px}
+    .toc{background:#f9fafb;padding:12px;border-left:4px solid #e2e8f0;margin:12px 0}
+    .note{background:#fffbeb;border-left:4px solid #f6c24a;padding:10px;margin:12px 0}
+    .faq-item{margin-bottom:12px}
+    .meta{font-size:13px;color:#555}
+    .author{border-top:1px solid #eee;padding-top:12px;margin-top:18px}
+    a{color:#0066cc}
+    .btn{display:inline-block;padding:8px 12px;border-radius:6px;background:#0066cc;color:#fff;text-decoration:none}
+    table{width:100%;border-collapse:collapse;margin:12px 0}
+    th,td{border:1px solid #e6e9ee;padding:8px;text-align:left}
+    /* Header */
+header.site-header {
+  background: #fff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #e03e2f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 1px;
+}
+
+/* Navigation Links */
+nav.nav-links a {
+  margin: 0 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #5c4dff;
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+nav.nav-links a:hover {
+  color: #5c4dff;
+}
+
+nav.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Actions (Login / Sign Up buttons) */
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions #loginBtn {
+  text-decoration: none;
+  color: #0077cc;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid #0077cc;
+  border-radius: 6px;
+}
+
+.actions .lang-btn {
+  background: #0077cc;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.actions .lang-btn:hover {
+  background: #005bb5;
+}
+
+/* User Menu */
+#userMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 220px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#userMenu:hover #dropdown {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#dropdown a {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+
+#dropdown a:hover {
+  background: #e0f0ff;
+}
+
+#dropdown svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  fill: #0077cc;
+}
+
+/* Responsive: hide nav on small screens */
+@media (max-width: 768px) {
+  nav.nav-links {
+    display: none;
+  }
+  header.site-header {
+    padding: 1rem;
+  }
+}
+/* Footer */
+footer.site-footer {
+  background: #1f2937;
+  color: #d1d5db;
+  padding: 3rem 1.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-about,
+.footer-links,
+.footer-social {
+  flex: 1 1 250px;
+}
+
+/* Section Titles */
+.footer-about h3,
+.footer-links h3,
+.footer-social h3 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #a5b4fc;
+}
+
+.footer-about p {
+  line-height: 1.5;
+  color: #9ca3af;
+}
+
+/* Links */
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links ul li a {
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #a5b4fc;
+}
+
+/* Social Icons */
+.footer-social .social-icons a {
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: #d1d5db;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.footer-social .social-icons a:hover {
+  color: #a5b4fc;
+}
+
+/* Bottom */
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-social .social-icons a {
+    margin-right: 0.5rem;
+  }
+}
+
+  </style>
+</head>
+<header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header>
+<body>
+<main class="container" role="main">
+  <header>
+    <p class="meta">GraphiTech — Engineering • PDF to AI Conversion Resources</p>
+    <h1>How to Convert PDF to AI for Graphics: Full Guide, Tools, and Techniques</h1>
+    <img src="/static/Design sans titre (17).png">
+    <p class="meta">Author: GraphiTech Engineering • Updated: March 29, 2026</p>
+  </header>
+
+  <!-- Table of contents (interactive) -->
+  <nav class="toc" aria-label="Table of contents">
+    <strong>Table of contents</strong>
+    <a href="#intro">Introduction — Why convert PDF to AI?</a>
+    <a href="#pdf-basics">PDF Basics: Understanding the source</a>
+    <a href="#ai-basics">AI Format Overview: What makes AI special</a>
+    <a href="#tools">Top Tools for Conversion (free & paid)</a>
+    <a href="#workflow">Step-by-step Conversion Workflow</a>
+    <a href="#vector-issues">Common Vector & Graphic Issues</a>
+    <a href="#optimization">Optimizing AI Files After Conversion</a>
+    <a href="#automation">Automation & Batch Conversion Tips</a>
+    <a href="#troubleshooting">Troubleshooting Common Problems</a>
+    <a href="#faq">FAQ</a>
+    <a href="#references">References & Resources</a>
+  </nav>
+
+  <section id="intro">
+    <h2>Introduction — Why convert PDF to AI?</h2>
+    <p>
+      PDF files often contain vector graphics, text, and layered content that designers may want to edit in <strong>Adobe Illustrator</strong>. Converting PDFs to AI preserves the editable shapes, paths, and layers while enabling fine-grained control for graphics, logos, and illustrations.
+    </p>
+    <p class="note"><strong>Key point:</strong> Conversion is not always perfect; some PDFs embed fonts as outlines or flatten layers, which affects editability. Choosing the right method depends on file complexity and intended use.</p>
+  </section>
+
+  <section id="pdf-basics">
+    <h2>PDF Basics: Understanding the source</h2>
+    <p>
+      Before converting, it's essential to understand what a PDF contains:
+    </p>
+    <table>
+      <thead><tr><th>Component</th><th>Role / Relevance to Conversion</th></tr></thead>
+      <tbody>
+        <tr><td>Vector paths</td><td>Editable lines and curves. Conversion retains these as AI paths.</td></tr>
+        <tr><td>Raster images</td><td>Embedded PNG/JPG graphics. They remain linked or embedded in AI.</td></tr>
+        <tr><td>Text objects</td><td>Fonts may be editable if embedded, otherwise outlined.</td></tr>
+        <tr><td>Layers</td><td>PDF layers may map to AI layers, depending on tool support.</td></tr>
+        <tr><td>Transparency & effects</td><td>Drop shadows, gradients, and blending modes may require adjustments after conversion.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="ai-basics">
+    <h2>AI Format Overview: What makes AI special</h2>
+    <p>
+      Adobe Illustrator (AI) files are native vector formats containing editable objects, layers, and advanced vector features. Unlike PDF, AI is fully editable in Illustrator, supports native blending, clipping masks, gradients, and preserves layer hierarchy.
+    </p>
+    <p class="note"><strong>Tip:</strong> Always aim to retain vector paths and text as editable objects when converting; avoid rasterizing unless necessary.</p>
+  </section>
+
+  <section id="tools">
+    <h2>Top Tools for Conversion (free & paid)</h2>
+
+    <h3>1. Adobe Illustrator</h3>
+    <p>
+      Illustrator itself can open PDFs and save them as AI files. Recommended for best fidelity:
+    </p>
+    <pre><code>File → Open → Select PDF → Choose Page → File → Save As → Adobe Illustrator (AI)</code></pre>
+
+    <h3>2. Affinity Designer</h3>
+    <p>
+      Supports PDF import with layer and vector recognition. Useful alternative for non-Adobe workflows.
+    </p>
+
+    <h3>3. Inkscape (Free)</h3>
+    <p>
+      Open-source editor. Imports PDF and allows export as SVG; AI conversion may require SVG → AI path export.
+    </p>
+
+    <h3>4. Online Converters</h3>
+    <ul>
+      <li><a href="https://www.pdf2go.com/pdf-to-ai" target="_blank">PDF2GO</a></li>
+      <li><a href="https://cloudconvert.com/pdf-to-ai" target="_blank">CloudConvert</a></li>
+      <li><a href="https://www.zamzar.com/convert/pdf-to-ai/" target="_blank">Zamzar</a></li>
+    </ul>
+
+    <h3>5. Scripting & Automation</h3>
+    <p>
+      For batch conversion, Illustrator scripts or Python libraries (like <code>pdf2image</code> + <code>svgpathtools</code>) allow automated extraction of vector content.
+    </p>
+  </section>
+
+  <section id="workflow">
+    <h2>Step-by-step Conversion Workflow</h2>
+    <ol>
+      <li>Open PDF in Illustrator or selected tool.</li>
+      <li>Check pages or artboards to import; select vector retention options.</li>
+      <li>Verify fonts: embed, replace, or outline as needed.</li>
+      <li>Check layers: merge, retain, or flatten depending on workflow.</li>
+      <li>Inspect transparency, gradients, and blending modes.</li>
+      <li>Save as AI with desired version compatibility.</li>
+      <li>Optionally, optimize paths: simplify curves, remove unused objects.</li>
+    </ol>
+  </section>
+
+  <section id="vector-issues">
+    <h2>Common Vector & Graphic Issues</h2>
+    <p>
+      Even after conversion, some issues may occur:
+    </p>
+    <ul>
+      <li>Text converted to outlines — no longer editable.</li>
+      <li>Missing fonts — replaced by default or blank.</li>
+      <li>Flattened transparency causing unexpected visuals.</li>
+      <li>Raster images embedded at low resolution.</li>
+      <li>Artboard sizes or page dimensions mismatched.</li>
+    </ul>
+  </section>
+
+  <section id="optimization">
+    <h2>Optimizing AI Files After Conversion</h2>
+    <h3>1. Simplify Paths</h3>
+    <p>Use Illustrator's <em>Object → Path → Simplify</em> to reduce anchor points while preserving shapes.</p>
+
+    <h3>2. Organize Layers</h3>
+    <p>Rename layers, group related objects, and remove hidden or unused layers to clean up the file.</p>
+
+    <h3>3. Verify Fonts</h3>
+    <p>Embed missing fonts or replace with system equivalents.</p>
+
+    <h3>4. Raster Image Check</h3>
+    <p>Ensure embedded images are high-resolution; link large images instead of embedding if needed.</p>
+
+    <h3>5. Save for Multiple Versions</h3>
+    <p>AI files can be saved with backward compatibility (e.g., Illustrator CS6, 2021) to allow wider usage.</p>
+  </section>
+
+  <section id="automation">
+    <h2>Automation & Batch Conversion Tips</h2>
+    <p>
+      For large-scale projects:
+    </p>
+    <ol>
+      <li>Use Illustrator scripts (.jsx) to loop over PDFs in a folder and save as AI.</li>
+      <li>Inkscape CLI can convert PDFs to SVGs, which Illustrator can then batch import.</li>
+      <li>Python + PyMuPDF for extracting vector content programmatically.</li>
+      <li>Cloud automation: Zapier or Make (Integromat) for automated conversion workflows.</li>
+    </ol>
+  </section>
+
+  <section id="troubleshooting">
+    <h2>Troubleshooting Common Problems</h2>
+    <h3>Problem: File won’t open in Illustrator</h3>
+    <p>Solution: Check PDF version, repair using Acrobat, or try another converter.</p>
+
+    <h3>Problem: Text is outlined or missing</h3>
+    <p>Solution: Verify font embedding; if missing, re-import PDF in tool that supports font retention.</p>
+
+    <h3>Problem: Raster images appear blurry</h3>
+    <p>Solution: Ensure images are embedded at sufficient resolution, or replace with higher-quality sources.</p>
+
+    <h3>Problem: Layers merged or missing</h3>
+    <p>Solution: Use tools that preserve layer hierarchy, or manually reorganize in Illustrator post-import.</p>
+  </section>
+
+  <section id="faq">
+    <h2>FAQ — quick answers to common questions</h2>
+
+    <div class="faq-item">
+      <h3>Q: Can all PDFs be converted perfectly to AI?</h3>
+      <p>A: Not always. PDFs with raster-only content, flattened layers, or embedded fonts as outlines may lose editability.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Q: Is AI the best format for editing?</h3>
+      <p>A: Yes, AI preserves vector paths, layers, and effects. SVG can be used as an alternative, but AI is native to Illustrator.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Q: Can I batch convert hundreds of PDFs?</h3>
+      <p>A: Yes — using Illustrator scripts, Inkscape CLI, or automation pipelines.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Q: Will converting PDFs to AI increase file size?</h3>
+      <p>A: Possibly. Embedding fonts, high-res images, and retaining layers can increase file size. Optimize paths and images to reduce size.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Q: Are online converters safe for sensitive files?</h3>
+      <p>A: Only if the service uses HTTPS and explicitly deletes files after processing. For confidential work, convert offline.</p>
+    </div>
+  </section>
+
+  <section id="references">
+    <h2>References & Resources</h2>
+    <ul>
+      <li><a href="https://helpx.adobe.com/illustrator/using/opening-pdf-files.html" target="_blank">Adobe Help: Opening PDF files in Illustrator</a></li>
+      <li><a href="https://inkscape.org/doc/tutorials/importing.pdf" target="_blank">Inkscape PDF import guide</a></li>
+      <li><a href="https://cloudconvert.com/pdf-to-ai" target="_blank">CloudConvert PDF to AI</a></li>
+      <li><a href="https://www.adobe.com/products/illustrator.html" target="_blank">Adobe Illustrator Official</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>About GraphiTech: GraphiTech provides resources and engineering guides for graphic designers and developers. Explore PDF, AI, and vector workflows for professional editing.</p>
+    <p>If this guide helped, consider linking to it — sharing improves visibility and resource quality.</p>
+  </footer>
+</main>
+<footer class="site-footer" aria-label="Footer">
+ <div class="footer-container">
+<div class="footer-about">
+<h3>About savefaste</h3>
+<p>
+ Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+</p>
+</div>
+<div class="footer-links">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/contactus">Contact Us</a></li>
+<li><a href="/aboutus">About Us</a></li>
+<li><a href="/privacypolicy">Privacy Policy</a></li>
+<li><a href="/terms">Terms of Service</a></li>
+</ul>
+</div>
+<div class="footer-social">
+<h3>Follow Us</h3>
+<div class="social-icons">
+<a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+<a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+<a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2025 Savefaste. All rights reserved.</span>
+</div>
+</footer>  
+</body>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const defaultAvatar = "https://i.pinimg.com/564x/1e/1f/af/1e1faf28f4e8ad4cf184b19db9807e21.jpg";
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    // FIX: صورة دائمة حتى لو Firebase لم يُرجع photoURL
+    let photo = user.photoURL;
+    if (!photo || photo === "null" || photo === "undefined") {
+      photo = defaultAvatar;
+    }
+
+    avatar.src = photo;
+    avatar.title = user.displayName || user.email;
+
+    // قائمة المعلومات
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${photo}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    avatar.onclick = (e) => {
+      e.stopPropagation();
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+
+    // صورة افتراضية حتى بدون مستخدم
+    avatar.src = defaultAvatar;
+  }
+});
+</script>
+
+</html>  

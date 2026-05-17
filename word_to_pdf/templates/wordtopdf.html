@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+
+  <!-- SEO Title -->
+  <title>Word to PDF Converter — Free, Fast & High-Quality Online Tool</title>
+
+  <!-- SEO Description -->
+  <meta name="description" 
+        content="Convert Word to PDF instantly with our free online tool. High-quality conversion, secure processing, and perfect formatting. No installation required.">
+
+  <!-- Keywords -->
+  <meta name="keywords" 
+        content="word to pdf, convert word to pdf, docx to pdf, online converter, free word to pdf, document converter">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://savefaste.com/word-to-pdf/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+
+  <!-- Open Graph Meta -->
+  <meta property="og:title" content="Word to PDF Converter — Free & Fast Tool" />
+  <meta property="og:description" content="Convert Word files to PDF in seconds with 100% accurate formatting." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://savefaste.com/word-to-pdf/" />
+  <meta property="og:image" content="/static/og-image.png" />
+
+  <!-- Twitter Meta -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Word to PDF Converter — Free & Accurate" />
+  <meta name="twitter:description" content="Fast, accurate, and secure Word to PDF conversion." />
+  <meta name="twitter:image" content="/static/og-image.png" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('word_to_pdf.static', filename='wordtopdfcss.css') }}">
+
+</head>
+<header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header> 
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <div class="container" id="container">
+    <h1 class="page-title">📄 Professional Word to PDF Converter</h1>
+    <p class="page-subtitle">Easily convert your Word documents (DOC, DOCX) to PDF — fast, secure, and free.</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-word fa-2xl" style="color:#2B579A;"></i></p>
+      <p>Click below or drag and drop your Word files</p>
+      <label class="upload-button" for="words"><i class="fa fa-folder-open"></i> Select Word Files</label>
+      <input type="file" id="words" name="words" multiple accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    </div>
+
+    <div id="thumbnails" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;"></div>
+
+    <button id="convertBtn" class="btn-convert" onclick="convertWords()">Convert Now</button>
+
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">Please wait while we securely convert your files...</p>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select <strong>one or more Word documents</strong> using the button above.</li>
+        <li>Once selected, the <strong>Convert Now</strong> button will appear.</li>
+        <li>Click it and wait a few seconds to <strong>download your PDF files</strong>.</li>
+      </ol>
+    </div>
+
+    <div id="result" style="margin-top: 20px;"></div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-item">
+      <h2>What is Word to PDF Conversion?</h2>
+      <p>
+        Word to PDF conversion is the process of transforming Microsoft Word documents (DOC, DOCX) into PDF files. This preserves the layout and formatting, making the documents easy to share and view on any device.
+      </p>
+    </div>
+
+    <div class="info-item">
+      <h2>Benefits of Converting Word to PDF</h2>
+      <ul>
+        <li><strong>Preserves formatting:</strong> Maintains fonts, images, and layouts.</li>
+        <li><strong>Universal compatibility:</strong> PDFs can be viewed on almost any device.</li>
+        <li><strong>Improves security:</strong> PDFs can be password protected and are harder to edit.</li>
+        <li><strong>Professional appearance:</strong> PDFs look polished for sharing and printing.</li>
+      </ul>
+    </div>
+
+    <div class="info-item">
+      <h2>How to Use This Tool</h2>
+      <p>
+        Upload your Word documents using the “Select Files” button or drag and drop them into the upload area. After your files are selected, click “Convert Now” to transform them instantly and download the resulting PDFs.
+      </p>
+      <p>
+        This conversion happens directly in your browser or securely on our server, ensuring your privacy and security.
+      </p>
+    </div>
+  </div>
+
+<footer class="site-footer" aria-label="Footer">
+ <div class="footer-container">
+<div class="footer-about">
+<h3>About savefaste</h3>
+<p>
+ Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+</p>
+</div>
+<div class="footer-links">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/contactus">Contact Us</a></li>
+<li><a href="/aboutus">About Us</a></li>
+<li><a href="/privacypolicy">Privacy Policy</a></li>
+<li><a href="/terms">Terms of Service</a></li>
+</ul>
+</div>
+<div class="footer-social">
+<h3>Follow Us</h3>
+<div class="social-icons">
+<a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+<a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+<a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2025 Savefaste. All rights reserved.</span>
+</div>
+</footer> 
+
+<script>
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('words');
+  const convertBtn = document.getElementById('convertBtn');
+
+  let selectedFiles = [];
+
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+
+  fileInput.addEventListener('change', () => {
+    handleFiles(fileInput.files);
+    fileInput.value = '';
+  });
+
+  function handleFiles(files) {
+    const newFiles = Array.from(files);
+    newFiles.forEach(file => {
+      if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+        selectedFiles.push(file);
+        renderThumbnail(file, selectedFiles.length - 1);
+      }
+    });
+    convertBtn.style.display = selectedFiles.length >= 1 ? 'block' : 'none';
+  }
+
+  function convertWords() {
+    if (selectedFiles.length < 1) {
+      alert('Please select at least one Word file.');
+      return;
+    }
+
+    convertBtn.style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    const formData = new FormData();
+    selectedFiles.forEach(file => {
+      formData.append('words', file);
+    });
+
+    // مثال طلب تحويل، يجب استبداله بواجهة API حقيقية لمعالجة Word to PDF
+    fetch('/wordtopdf/start-convert', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = `wordtopdf/progress?session_id=${data.session_id}`;
+      } else {
+        alert(data.message || 'Failed to start conversion.');
+        convertBtn.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      alert('An error occurred, please try again.');
+      convertBtn.style.display = 'block';
+    });
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+  }
+
+  const thumbnails = document.getElementById('thumbnails');
+
+  function renderThumbnail(file, index) {
+    const item = document.createElement('div');
+    item.classList.add('thumbnail-item');
+
+    // Word icon thumbnail
+    const icon = document.createElement('i');
+    icon.className = 'fa-solid fa-file-word fa-5x';
+    icon.style.color = '#2B579A';
+
+    // Filename label
+    const label = document.createElement('div');
+    label.classList.add('thumbnail-filename');
+    label.textContent = file.name;
+
+    // Delete button
+    const delBtn = document.createElement('button');
+    delBtn.classList.add('delete-btn');
+    delBtn.textContent = '×';
+    delBtn.title = 'Remove file';
+    delBtn.onclick = () => {
+      selectedFiles.splice(index, 1);
+      thumbnails.removeChild(item);
+      updateThumbnails();
+      convertBtn.style.display = selectedFiles.length >= 1 ? 'block' : 'none';
+    };
+
+    item.appendChild(icon);
+    item.appendChild(label);
+    item.appendChild(delBtn);
+
+    thumbnails.appendChild(item);
+  }
+
+  function updateThumbnails() {
+    thumbnails.innerHTML = '';
+    selectedFiles.forEach((file, idx) => {
+      renderThumbnail(file, idx);
+    });
+  }
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    avatar.src = user.photoURL || "https://via.placeholder.com/45";
+    avatar.title = user.displayName || user.email;
+
+    // محتوى القائمة
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${user.photoURL || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-weight:bold; font-size:14px; color:#0077cc;"></div>
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <!-- SVG icon -->
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    // toggle عند الضغط على الصورة
+    avatar.onclick = (e) => {
+      e.stopPropagation(); // منع حدث النقر من الانتقال للجسم
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    // إخفاء Dropdown عند النقر خارجها
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>

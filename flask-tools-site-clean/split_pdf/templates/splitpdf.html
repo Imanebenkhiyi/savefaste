@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Advanced Split PDF Tool</title>
+  <link rel="stylesheet" href="{{ url_for('split_pdf.static', filename='split.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="container" id="container">
+    <h1>Split Your PDF File</h1>
+    <p class="description">Upload your PDF and select how you want to split it.</p>
+
+    <!-- Drag & Drop Area -->
+    <div class="drop-zone" id="upload-area">
+      <span class="drop-message">Drag & Drop your PDF here or click to select</span>
+      <input type="file" name="pdf" id="pdfs" accept="application/pdf" />
+    </div>
+  <div id="thumbnailContainer" style="margin-top: 15px;"></div>
+
+    <!-- Options -->
+    <label for="pages">Pages (e.g. 1-3,5):</label>
+    <input type="text" name="pages" id="pages" placeholder="e.g. 1-3,5,7" />
+
+    <label for="splitByN">Split every N pages:</label>
+    <input type="number" name="split_n" id="splitByN" min="1" />
+    <!-- Split Each Page Separately -->
+    <label for="splitEach">Split each page separately:</label>
+    <input type="checkbox" id="splitEach" />
+
+    <!-- Compress Output -->   
+    <label for="compress">Compress output:</label>
+    <input type="checkbox" id="compress" />
+
+    <!-- Output File Name -->
+    <label for="output_name">Output file name (optional):</label>
+    <input type="text" id="output_name" placeholder="e.g. my-split-file" />
+
+
+    <button type="button" id="submitBtn" onclick="splitPDF()" style="display: none;">Split PDF</button>
+
+    <!-- Preview & Details -->
+    <div id="fileDetails" class="hidden">
+      <p><strong>File:</strong> <span id="fileName"></span></p>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div id="progress" class="hidden">
+      <p>Processing... Please wait.</p>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section hidden" id="downloadSection">
+      <a href="#" class="download-btn" id="downloadLink">Download Result</a>
+    </div>
+  </div>
+
+  <!-- Info Section -->
+  <div class="info-section">
+    <div class="info-item">
+      <h2>What is PDF Splitting?</h2>
+      <p>PDF splitting is the process of dividing one PDF into multiple smaller parts...</p>
+    </div>
+    <div class="info-item">
+      <h2>Benefits of Splitting PDFs</h2>
+      <ul>
+        <li><strong>Focus on specific pages:</strong> Extract only what you need.</li>
+        <li><strong>Reduce file size:</strong> Make large files more manageable.</li>
+        <li><strong>Improve sharing:</strong> Send only necessary parts.</li>
+        <li><strong>Organize better:</strong> Separate sections into multiple documents.</li>
+      </ul>
+    </div>
+    <div class="info-item">
+      <h2>How to Use This Tool</h2>
+      <p>Upload your PDF file, choose how you'd like to split it — by page numbers, by splitting each page, or every N pages. Click "Split Now" and get your result instantly.</p>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    This tool works directly in your browser. Your files never leave your device. 100% privacy.
+  </div>
+
+  <!-- === JavaScript Logic === -->
+ <script>
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('pdfs');
+  const submitBtn = document.getElementById('submitBtn');
+  const fileDetails = document.getElementById('fileDetails');
+  const fileNameSpan = document.getElementById('fileName');
+  const progress = document.getElementById('progress');
+
+  let selectedFile = null;
+
+  // ✅ النقر على المنطقة لفتح اختيار الملفات
+  uploadArea.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  // Drag & Drop events
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    handleFile(file);
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    handleFile(file);
+  });
+
+  function handleFile(file) {
+  if (!file || file.type !== 'application/pdf') {
+    Swal.fire('Invalid file', 'Please upload a valid PDF.', 'error');
+    return;
+  }
+
+  selectedFile = file;
+  fileNameSpan.textContent = file.name;
+  fileDetails.classList.remove('hidden');
+  submitBtn.style.display = 'block';
+
+  // هنا عرض أول صفحة من ملف PDF
+  renderThumbnail(file);
+}
+
+  function renderThumbnail(file) {
+  const fileReader = new FileReader();
+
+  fileReader.onload = function() {
+    const typedarray = new Uint8Array(this.result);
+
+    pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+      pdf.getPage(1).then(page => {
+        const viewport = page.getViewport({ scale: 0.5 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+
+        page.render(renderContext).promise.then(() => {
+          const thumbnailContainer = document.getElementById('thumbnailContainer');
+          thumbnailContainer.innerHTML = '';  // امسح أي محتوى قديم
+          thumbnailContainer.appendChild(canvas);
+        });
+      });
+    }).catch(err => {
+      console.error('Error loading PDF:', err);
+      // ممكن تعرض رسالة خطأ للمستخدم لو حبيت
+    });
+  };
+
+  fileReader.readAsArrayBuffer(file);
+}
+
+
+  function splitPDF() {
+    if (!selectedFile) {
+      Swal.fire('No file', 'Please select a PDF file first.', 'warning');
+      return;
+    }
+
+    submitBtn.style.display = 'none';
+    progress.classList.remove('hidden');
+
+    const formData = new FormData();
+    formData.append('pdf', selectedFile);
+    formData.append('pages', document.getElementById('pages').value);
+    formData.append('split_each', document.getElementById('splitEach').checked);
+    formData.append('split_n', document.getElementById('splitByN').value);
+    formData.append('compress', document.getElementById('compress').checked);
+    formData.append('output_name', document.getElementById('output_name').value);
+
+    fetch('/splitpdf/start-split', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = `/splitpdf/progress?session_id=${data.session_id}`;
+      } else {
+        Swal.fire('Error', data.message || 'Failed to split PDF.', 'error');
+        submitBtn.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      Swal.fire('Error', 'An error occurred, please try again.', 'error');
+      submitBtn.style.display = 'block';
+    })
+    .finally(() => {
+      progress.classList.add('hidden');
+    });
+  }
+</script>
+
+</body>
+</html>

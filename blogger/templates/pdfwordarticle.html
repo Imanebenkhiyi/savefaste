@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <link rel="icon" type="image/png" href="/static/favicon.png">
+<meta charset="utf-8">
+<title>Why Do PDF Files Get Corrupted? Causes, Prevention, and How to Repair Them — SaveFaste</title>
+<meta name="description" content="Comprehensive technical and practical guide explaining why PDF files get corrupted, how to diagnose and repair them (manual & automated), prevention best practices, and recommended tools including SaveFaste's repair tool.">
+<meta name="keywords" content="corrupted PDF, fix corrupted PDF, repair PDF, PDF corruption causes, XREF repair, SaveFaste PDF repair, PDF troubleshooting, PDF recovery">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://www.savefaste.com/blog/why-pdf-get-corrupted">
+<meta name="robots" content="index,follow">
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.7;color:#111;margin:0;padding:0;background:#fff}
+  .container{max-width:980px;margin:28px auto;padding:22px}
+  header{margin-bottom:14px}
+  h1{font-size:28px;margin:6px 0}
+  h2{font-size:20px;margin:18px 0 8px}
+  h3{font-size:16px;margin:12px 0}
+  p{margin:10px 0}
+  a{color:#0066cc}
+  .toc{background:#f8fafc;padding:14px;border-left:4px solid #e6eef8;margin:12px 0}
+  .toc a{display:block;margin:6px 0}
+  pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow:auto}
+  code{font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:12px 0}
+  th,td{border:1px solid #e6e9ee;padding:10px;text-align:left}
+  .note{background:#fff8e6;border-left:4px solid #f1c232;padding:10px;margin:12px 0}
+  .btn{display:inline-block;padding:10px 14px;border-radius:6px;background:#0066cc;color:#fff;text-decoration:none}
+  .meta{font-size:13px;color:#555;margin-bottom:6px}
+  footer{margin-top:22px;border-top:1px solid #eee;padding-top:12px;color:#555;font-size:13px}
+  .faq-item{margin-bottom:12px;padding:10px;border-radius:6px;background:#fbfdff;border:1px solid #eef6ff}
+  /* Footer */
+footer.site-footer {
+  background: #1f2937;
+  color: #d1d5db;
+  padding: 3rem 1.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-about,
+.footer-links,
+.footer-social {
+  flex: 1 1 250px;
+}
+
+/* Section Titles */
+.footer-about h3,
+.footer-links h3,
+.footer-social h3 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #a5b4fc;
+}
+
+.footer-about p {
+  line-height: 1.5;
+  color: #9ca3af;
+}
+
+/* Links */
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links ul li a {
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #a5b4fc;
+}
+
+/* Social Icons */
+.footer-social .social-icons a {
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: #d1d5db;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.footer-social .social-icons a:hover {
+  color: #a5b4fc;
+}
+
+/* Bottom */
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-social .social-icons a {
+    margin-right: 0.5rem;
+  }
+}
+/* Header */
+header.site-header {
+  background: #fff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #e03e2f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 1px;
+}
+
+/* Navigation Links */
+nav.nav-links a {
+  margin: 0 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #5c4dff;
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+nav.nav-links a:hover {
+  color: #5c4dff;
+}
+
+nav.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Actions (Login / Sign Up buttons) */
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions #loginBtn {
+  text-decoration: none;
+  color: #0077cc;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid #0077cc;
+  border-radius: 6px;
+}
+
+.actions .lang-btn {
+  background: #0077cc;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.actions .lang-btn:hover {
+  background: #005bb5;
+}
+
+/* User Menu */
+#userMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 220px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#userMenu:hover #dropdown {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#dropdown a {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+
+#dropdown a:hover {
+  background: #e0f0ff;
+}
+
+#dropdown svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  fill: #0077cc;
+}
+
+/* Responsive: hide nav on small screens */
+@media (max-width: 768px) {
+  nav.nav-links {
+    display: none;
+  }
+  header.site-header {
+    padding: 1rem;
+  }
+}
+
+</style>
+</head>
+  <header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header>
+<body>
+<main class="container" role="main">
+  <header>
+    <p class="meta">SaveFaste — Engineering • PDF Repair & Conversion Resources</p>
+    <h1>Why Do PDF Files Get Corrupted? Causes, Prevention, and How to Repair Them</h1>
+    <img src="/static/Design sans titre (12).png">
+    <p class="meta">Author: SaveFaste Engineering • Updated: December 11, 2025</p>
+  </header>
+
+  <!-- Table of contents (interactive) -->
+  <nav class="toc" aria-label="Table of contents">
+    <strong>Table of contents</strong>
+    <a href="#intro">Introduction — what "corrupted PDF" means</a>
+    <a href="#structure">Quick primer: PDF internal structure</a>
+    <a href="#causes">Common causes of PDF corruption</a>
+    <a href="#symptoms">Symptoms & how to detect corruption</a>
+    <a href="#basic-repairs">Basic repair methods (quick wins)</a>
+    <a href="#advanced-repairs">Advanced repair techniques (tech users)</a>
+    <a href="#savefaste-repair">Repairing with SaveFaste — step-by-step</a>
+    <a href="#prevention">Prevention best practices</a>
+    <a href="#checklist">Practical diagnostic checklist</a>
+    <a href="#faq">FAQ</a>
+    <a href="#references">References & tools</a>
+  </nav>
+
+  <section id="intro">
+    <h2>Introduction — what "corrupted PDF" means</h2>
+    <p>
+      A PDF can appear "corrupted" for many reasons: it might not open, show blank or scrambled pages, produce garbled text, or crash viewers. Corruption ranges from minor display glitches to structural damage that renders the file unusable.
+    </p>
+    <p class="note"><strong>Key point:</strong> PDF is a structured file (objects, streams, cross-references). Corruption typically affects one or more of these structures — not necessarily the visible content — which is why repair requires understanding internals or using a tool that does.</p>
+  </section>
+
+  <section id="structure">
+    <h2>Quick primer: PDF internal structure (why structure matters)</h2>
+    <p>
+      Understanding the internal layout helps diagnose failures. At a high level, a PDF contains:
+    </p>
+    <table>
+      <thead><tr><th>Component</th><th>Role / Why it breaks</th></tr></thead>
+      <tbody>
+        <tr><td>Header</td><td>Indicates PDF version. If missing or modified, readers may refuse the file.</td></tr>
+        <tr><td>Objects & dictionaries</td><td>Contain page descriptions, fonts, metadata; missing objects = missing content.</td></tr>
+        <tr><td>Streams</td><td>Hold compressed data (images, text operators); corrupted streams produce garbled output.</td></tr>
+        <tr><td>Cross-reference (XREF)</td><td>Maps object numbers to offsets. If XREF is wrong, readers can't locate objects.</td></tr>
+        <tr><td>Trailer & startxref</td><td>Points to XREF start; if incorrect, file appears broken.</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      Modern PDFs may also include XRef streams, object streams, and incremental updates — these increase complexity and repair difficulty but allow features like signing without rewriting the full file.
+    </p>
+  </section>
+
+  <section id="causes">
+    <h2>Common causes of PDF corruption (detailed)</h2>
+
+    <h3>1. Interrupted downloads or partial transfers</h3>
+    <p>
+      The most common, especially when files are large. A partial file often misses the trailer/XREF and final objects; some readers attempt recovery, others fail outright.
+    </p>
+
+    <h3>2. Storage/media errors (bad sectors, failing drives)</h3>
+    <p>
+      HDD/SSD bad sectors, corrupted USB drives, or faulty SD cards can flip bytes. Modern filesystems detect many errors but not always; long-term archival on unreliable media increases risk.
+    </p>
+
+    <h3>3. Transfer protocol issues (FTP, email, cloud sync conflicts)</h3>
+    <p>
+      Binary files must be transferred in binary mode. Text-mode transfers or interrupted sync (partial upload) produce truncated or mangled PDFs. Sync services (e.g., conflicting revisions) can create hybrid or partial files.
+    </p>
+
+    <h3>4. Application crash or improper save</h3>
+    <p>
+      If a PDF writer (desktop app or server process) crashes during save, it may write only a subset of objects and leave the XREF inconsistent.
+    </p>
+
+    <h3>5. Software bugs or malformed generator output</h3>
+    <p>
+      Some PDF generators (especially custom or internal libraries) may produce malformed dictionaries, incorrect Length entries for streams, or missing /Root entries — these lead to structured corruption even though the file was "fully written".
+    </p>
+
+    <h3>6. Malware/tampering</h3>
+    <p>
+      Malicious actors sometimes append data or inject objects. Even benign tools that edit metadata can accidentally corrupt files if they mis-handle incremental updates or encryption.
+    </p>
+
+    <h3>7. Encryption & password mishandling</h3>
+    <p>
+      Corrupt or damaged encryption dictionaries, or partial saves while applying encryption, can produce unreadable PDFs. Removing encryption incorrectly may also damage structure.
+    </p>
+
+    <h3>8. Linearization / streaming mismatches</h3>
+    <p>
+      Linearized (web-optimized) PDFs contain additional structures to serve first pages faster. If these are damaged, viewers may still show first page but fail on deeper pages, or vice versa.
+    </p>
+  </section>
+
+  <section id="symptoms">
+    <h2>Symptoms & how to detect corruption</h2>
+    <p>Common visible symptoms:</p>
+    <ul>
+      <li>File won’t open or shows "file damaged" message</li>
+      <li>Blank or white pages where content should be</li>
+      <li>Garbled or wrong characters (often font/ToUnicode issues)</li>
+      <li>Missing images or clipped graphics</li>
+      <li>Application crashes or freezes on open</li>
+      <li>Partial content — some pages OK, others not</li>
+    </ul>
+
+    <h3>Detecting corruption (tools & quick checks)</h3>
+    <ol>
+      <li>Try multiple viewers: Chrome, Adobe Reader, MuPDF — some auto-repair.</li>
+      <li>Check file size vs expected; truncated files are suspect.</li>
+      <li>Open in a hex/text viewer and search for <code>%PDF-</code>, <code>startxref</code>, <code>%%EOF</code>.</li>
+      <li>Use command-line tools: <code>pdfinfo</code>, <code>qpdf --check</code>, <code>mutool info</code>.</li>
+    </ol>
+  </section>
+
+  <section id="basic-repairs">
+    <h2>Basic repair methods (quick wins)</h2>
+
+    <h3>Method A — Try different PDF readers</h3>
+    <p>
+      Some readers are tolerant and will reassemble missing XREF entries or ignore minor issues. Always test with multiple viewers first.
+    </p>
+
+    <h3>Method B — Re-download or re-copy</h3>
+    <p>
+      If corruption likely occurred during transfer, re-download from the original source or copy again from the original storage.
+    </p>
+
+    <h3>Method C — Restore from version history or backups</h3>
+    <p>
+      Cloud providers (Drive/OneDrive) often keep previous versions; restore the last good revision. Local backups (Time Machine, File History) also help.
+    </p>
+
+    <h3>Method D — Convert to another format</h3>
+    <p>
+      Converting to Word, images, or plain text using robust converters sometimes bypasses broken structures and allows content recovery. Save extracted content into a new PDF.
+    </p>
+
+    <h3>Method E — Use an automated repair service</h3>
+    <p>
+      Web services like SaveFaste's repair tool analyze structure and attempt to reconstruct missing XREFs and streams automatically. This is the fastest for non-technical users.
+    </p>
+  </section>
+
+  <section id="advanced-repairs">
+    <h2>Advanced repair techniques (for technical users)</h2>
+
+    <h3>1. Rebuild XREF using qpdf</h3>
+    <p>
+      qpdf can rebuild cross references and normalize structure:
+    </p>
+    <pre><code>qpdf --rebuild-xref corrupted.pdf fixed.pdf</code></pre>
+    <p>
+      This often recovers files with broken offsets or truncated XREF sections.
+    </p>
+
+    <h3>2. Use Ghostscript to rewrite the PDF</h3>
+    <p>
+      Ghostscript renders and writes a brand new PDF, which can eliminate structural issues at the cost of possibly rasterizing some vector content:
+    </p>
+    <pre><code>gs -o repaired.pdf -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress corrupted.pdf</code></pre>
+
+    <h3>3. Extract and inspect streams</h3>
+    <p>
+      If a specific stream is the problem (wrong filter, bad length), extract between <code>stream</code> and <code>endstream</code>, decompress via the correct filters (Flate, ASCII85) and inspect operators. Tools like <code>mutool extract</code> help.
+    </p>
+
+    <h3>4. Manual XREF reconstruction</h3>
+    <p>
+      Using a hex editor and knowledge of object numbering, you can locate object headers (<code>n 0 obj</code>) and recompute offsets to build a new XREF. This is advanced and risky, but sometimes necessary for heavily damaged files.
+    </p>
+
+    <h3>5. Recovering text without ToUnicode</h3>
+    <p>
+      When <code>/ToUnicode</code> maps are missing, extract glyph codes and map them using font cmap heuristics or by rendering text to images and running OCR to recover readable text.
+    </p>
+  </section>
+
+  <section id="savefaste-repair">
+    <h2>Repairing with SaveFaste — step-by-step (recommended for most users)</h2>
+    <p>
+      SaveFaste's online repair pipeline combines automated XREF reconstruction, stream validation, font heuristics, and optional OCR fallback to maximize recovery rates while protecting user privacy.
+    </p>
+
+    <h3>How to repair a PDF on SaveFaste</h3>
+    <ol>
+      <li>Open <a href="https://www.savefaste.com" target="_blank" rel="noopener">SaveFaste PDF Repair</a>.</li>
+      <li>Upload the corrupted file (drag & drop or file picker).</li>
+      <li>Allow analysis — SaveFaste scans headers, objects, streams, and XREF sections.</li>
+      <li>Choose repair mode: <em>Quick (XREF rebuild)</em> or <em>Deep (streams + fonts + OCR fallback)</em>.</li>
+      <li>Download repaired file or extracted content.</li>
+    </ol>
+
+    <p class="note"><strong>Privacy:</strong> Files are removed after processing. For sensitive documents, use local tools or SaveFaste's business/private instances.</p>
+  </section>
+
+  <section id="prevention">
+    <h2>Prevention best practices — stop corruption before it happens</h2>
+    <ul>
+      <li><strong>Use reliable software:</strong> well-known PDF generators & libraries reduce malformed output.</li>
+      <li><strong>Keep backups & versioning:</strong> cloud version history and local backups (multiple copies).</li>
+      <li><strong>Avoid sudden shutdowns:</strong> ensure saving finishes before closing apps or unplugging devices.</li>
+      <li><strong>Transfer safely:</strong> use binary transfer modes and verify checksums for critical files.</li>
+      <li><strong>Regular integrity checks:</strong> run periodic <code>qpdf --check</code> or similar on archives.</li>
+      <li><strong>Use archive formats:</strong> store important PDFs in zip/tar with checksums or use PDF/A for long-term archiving.</li>
+    </ul>
+  </section>
+
+  <section id="checklist">
+    <h2>Practical diagnostic checklist (quick reference)</h2>
+    <ol>
+      <li>Confirm header & EOF markers: search for <code>%PDF-</code> and <code>%%EOF</code>.</li>
+      <li>Run <code>qpdf --check file.pdf</code> or <code>mutool info file.pdf</code>.</li>
+      <li>Try opening in another viewer (Chrome, Foxit, MuPDF).</li>
+      <li>Re-download / re-copy from source.</li>
+      <li>Attempt automated repair (SaveFaste or qpdf/ghostscript).</li>
+      <li>If needed, escalate to manual extraction or professional recovery services.</li>
+    </ol>
+  </section>
+
+  <section id="faq">
+    <h2>FAQ — quick answers to common user questions</h2>
+
+    <div class="faq-item">
+      <h3>Q: My PDF says "file is damaged and could not be repaired" — is it lost?</h3>
+      <p>A: Not necessarily. That error means the reader couldn't auto-repair. Try other readers, qpdf/ghostscript, conversion, or SaveFaste's repair. Many files are recoverable.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Q: Can I repair a PDF offline if I cannot upload it?</h3>
+      <p>A: Yes — use qpdf, mutool, Ghostscript, or pdftk on desktop. These tools can rebuild XREF or re-render the document locally.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Q: Is it safe to upload confidential PDFs to an online repair service?</h3>
+      <p>A: Only if the service explicitly states privacy, uses HTTPS, and auto-deletes files after processing. For highly sensitive documents prefer offline repair or an enterprise/private instance.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Q: Why does text look correct in one viewer but garbled in another?</h3>
+      <p>A: Viewers use different fallback strategies for fonts and ToUnicode mapping. One may render using embedded font glyphs, another tries to map to Unicode and fails — resulting in garbled text.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Q: How often should I verify archives for corruption?</h3>
+      <p>A: For important archives, verify checksums and run integrity checks monthly or quarterly depending on retention policy.</p>
+    </div>
+
+  </section>
+
+ 
+
+  <footer>
+    <p>About SaveFaste: SaveFaste provides privacy-focused PDF tools (merge, split, compress, convert, OCR, repair) for individuals and businesses. For API or enterprise solutions contact engineers@savefaste.com</p>
+    <p>If this guide helped, consider linking to it — links improve E-E-A-T and help us produce more technical resources.</p>
+  </footer>
+  </main>
+  <footer class="site-footer" aria-label="Footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>About savefaste</h3>
+        <p>
+          Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+        </p>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contactus">Contact Us</a></li>
+          <li><a href="/aboutus">About Us</a></li>
+          <li><a href="/privacypolicy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+          <a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Savefaste. All rights reserved.</span>
+  
+    </div>
+  </footer>
+
+
+<!-- Structured Data: Article + FAQ (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.savefaste.com/blog/why-pdf-get-corrupted"
+  },
+  "headline": "Why Do PDF Files Get Corrupted? Causes, Prevention, and How to Repair Them",
+  "description": "Comprehensive technical and practical guide explaining why PDF files get corrupted, how to diagnose and repair them (manual & automated), prevention best practices, and recommended tools including SaveFaste's repair tool.",
+  "image": "https://www.savefaste.com/images/pdf-repair-guide.png",
+  "author": {
+    "@type": "Organization",
+    "name": "SaveFaste Engineering",
+    "url": "https://www.savefaste.com/about"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SaveFaste",
+    "url": "https://www.savefaste.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.savefaste.com/logo.png"
+    }
+  },
+  "datePublished": "2025-12-11",
+  "dateModified": "2025-12-11",
+  "keywords": "corrupted PDF, fix corrupted PDF, PDF repair, SaveFaste"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "My PDF says 'file is damaged and could not be repaired' — is it lost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not necessarily. That error means the reader couldn't auto-repair. Try other readers, qpdf/ghostscript, conversion, or SaveFaste's repair. Many files are recoverable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I repair a PDF offline if I cannot upload it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — use qpdf, mutool, Ghostscript, or pdftk on desktop. These tools can rebuild XREF or re-render the document locally."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe to upload confidential PDFs to an online repair service?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only if the service explicitly states privacy, uses HTTPS, and auto-deletes files after processing. For highly sensitive documents prefer offline repair or an enterprise/private instance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does text look correct in one viewer but garbled in another?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Viewers use different fallback strategies for fonts and ToUnicode mapping. One may render using embedded font glyphs, another tries to map to Unicode and fails — resulting in garbled text."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often should I verify archives for corruption?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For important archives, verify checksums and run integrity checks monthly or quarterly depending on retention policy."
+      }
+    }
+  ]
+}
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    avatar.src = user.photoURL || "https://via.placeholder.com/45";
+    avatar.title = user.displayName || user.email;
+
+    // محتوى القائمة
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${user.photoURL || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-weight:bold; font-size:14px; color:#0077cc;"></div>
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <!-- SVG icon -->
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    // toggle عند الضغط على الصورة
+    avatar.onclick = (e) => {
+      e.stopPropagation(); // منع حدث النقر من الانتقال للجسم
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    // إخفاء Dropdown عند النقر خارجها
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>

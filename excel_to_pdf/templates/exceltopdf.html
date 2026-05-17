@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- SEO Title -->
+  <title>Excel to PDF Converter — Free, Fast & High-Quality Online Tool</title>
+
+  <!-- SEO Description -->
+  <meta name="description" 
+        content="Convert Excel to PDF instantly with our free online tool. Preserve formatting, tables, charts and layout. Fast, secure and high-quality XLS/XLSX to PDF conversion.">
+
+  <!-- SEO Keywords -->
+  <meta name="keywords" 
+        content="excel to pdf, xlsx to pdf, xls to pdf, convert excel to pdf, online converter, free excel to pdf, spreadsheet to pdf">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://savefaste.com/excel-to-pdf/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/static/favicon.png" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Excel to PDF Converter — Free & Fast Tool" />
+  <meta property="og:description" 
+        content="Convert Excel spreadsheets to PDF in seconds with accurate formatting and secure processing." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://savefaste.com/excel-to-pdf/" />
+  <meta property="og:image" content="/static/og-image.png" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Excel to PDF Converter — Free & Accurate" />
+  <meta name="twitter:description" 
+        content="Fast, secure, and high-quality Excel to PDF conversion with perfect table preservation." />
+  <meta name="twitter:image" content="/static/og-image.png" />
+      <link rel="icon" type="image/png" href="/static/favicon.png">
+
+  <!-- External Libraries -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+  </script>
+
+  <!-- Page CSS -->
+  <link rel="stylesheet" 
+  href="{{ url_for('excel_to_pdf.static', filename='exceltopdfcss.css') }}">
+   
+</head>
+
+<header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header> 
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+  <div class="container" id="container">
+    <h1 class="page-title">📊 Excel to PDF Converter</h1>
+    <p class="page-subtitle">Easily convert your Excel spreadsheets (.xls, .xlsx) to PDF format — fast, secure, and free.</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-arrow-up fa-2xl"></i></p>
+      <p>Click below or drag and drop your Excel files</p>
+      <label class="upload-button" for="excels"><i class="fa fa-folder-open"></i> Select Excel Files</label>
+      <input type="file" id="excels" name="excels" multiple accept=".xls,.xlsx" style="display:none;">
+    </div>
+
+    <ul class="file-list" id="fileList"></ul>
+
+    <button id="convertBtn" class="btn-merge" onclick="convertExcels()">Convert Now</button>
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">Please wait while we convert your Excel files...</p>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select one or more <strong>Excel files (.xls, .xlsx)</strong>.</li>
+        <li>After selecting, the <strong>Convert Now</strong> button will appear.</li>
+        <li>Click it to <strong>download the PDF version</strong> of your Excel sheets.</li>
+      </ol>
+    </div>
+</div>
+    <div class="info-section">
+      <div class="info-item">
+        <h2>Why Convert Excel to PDF?</h2>
+        <p>PDF format preserves your spreadsheet’s layout, making it ideal for sharing, printing, or archiving financial data, tables, and reports.</p>
+      </div>
+
+      <div class="info-item">
+        <h2>Benefits of PDF Conversion</h2>
+        <ul>
+          <li>Universal compatibility for viewing</li>
+          <li>Prevents unintentional edits</li>
+          <li>Professional presentation for reports</li>
+          <li>Reduced file size for sharing</li>
+        </ul>
+      </div>
+
+      <div class="info-item">
+        <h2>Privacy First</h2>
+        <p>This tool works 100% in-browser. Your Excel files never leave your device, ensuring maximum privacy and data safety during conversion.</p>
+      </div>
+    </div>
+
+  
+<footer class="site-footer" aria-label="Footer">
+ <div class="footer-container">
+<div class="footer-about">
+<h3>About savefaste</h3>
+<p>
+ Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+</p>
+</div>
+<div class="footer-links">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/contactus">Contact Us</a></li>
+<li><a href="/aboutus">About Us</a></li>
+<li><a href="/privacypolicy">Privacy Policy</a></li>
+<li><a href="/terms">Terms of Service</a></li>
+</ul>
+</div>
+<div class="footer-social">
+<h3>Follow Us</h3>
+<div class="social-icons">
+<a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+<a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+<a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2025 Savefaste. All rights reserved.</span>
+</div>
+</footer>
+  <script>
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('excels');
+    const convertBtn = document.getElementById('convertBtn');
+    const fileList = document.getElementById('fileList');
+
+    let selectedFiles = [];
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', () => {
+      handleFiles(fileInput.files);
+      fileInput.value = '';
+    });
+
+    function handleFiles(files) {
+      const newFiles = Array.from(files);
+      newFiles.forEach(file => {
+        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+          selectedFiles.push(file);
+        }
+      });
+      renderFileList();
+      convertBtn.style.display = selectedFiles.length > 0 ? 'block' : 'none';
+    }
+
+    function renderFileList() {
+      fileList.innerHTML = '';
+      selectedFiles.forEach((file, index) => {
+        const li = document.createElement('li');
+        li.textContent = file.name;
+        fileList.appendChild(li);
+      });
+    }
+
+     function convertExcels() {
+  if (selectedFiles.length === 0) {
+    alert('Please select at least one Excel file.');
+    return;
+  }
+  convertBtn.style.display = 'none';
+  document.getElementById('loading-spinner').style.display = 'block';
+
+  const formData = new FormData();
+  selectedFiles.forEach(file => {
+    formData.append('excels', file);
+  });
+
+  fetch('exceltopdf/start-convert', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      // تأكد أن بيانات session_id و files موجودة
+      if(data.session_id && data.files && data.files.length > 0){
+        const firstFile = data.files[0];
+        // تحويل إلى صفحة تقدم مع session_id و filename
+        window.location.href = `/exceltopdf/progress?session_id=${data.session_id}&filename=${encodeURIComponent(firstFile)}`;
+      } else {
+        alert('Conversion started but no files received.');
+        convertBtn.style.display = 'block';
+        document.getElementById('loading-spinner').style.display = 'none';
+      }
+    } else {
+      alert(data.message || 'Failed to start conversion.');
+      convertBtn.style.display = 'block';
+      document.getElementById('loading-spinner').style.display = 'none';
+    }
+  })
+  .catch(() => {
+    alert('An error occurred, please try again.');
+    convertBtn.style.display = 'block';
+    document.getElementById('loading-spinner').style.display = 'none';
+  });
+}
+
+
+  </script>
+ <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    avatar.src = user.photoURL || "https://via.placeholder.com/45";
+    avatar.title = user.displayName || user.email;
+
+    // محتوى القائمة
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${user.photoURL || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-weight:bold; font-size:14px; color:#0077cc;"></div>
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <!-- SVG icon -->
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    // toggle عند الضغط على الصورة
+    avatar.onclick = (e) => {
+      e.stopPropagation(); // منع حدث النقر من الانتقال للجسم
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    // إخفاء Dropdown عند النقر خارجها
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>

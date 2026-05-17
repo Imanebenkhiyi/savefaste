@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>How PDF Stores Images, Layers & Metadata — A Full Engineering Guide — SaveFaste</title>
+  <meta name="description" content="Engineering-level guide: how PDF files embed images, implement layer (OCG) structures, and store metadata. Includes stream handling, filters, XObject types, optional content groups (OCG), metadata schemas (XMP), and practical advice for extraction, repair and optimization.">
+  <meta name="keywords" content="PDF images, PDF layers, OCG, XObject, Image XObject, inline image, PDF metadata, XMP, PDF internals, SaveFaste">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="canonical" href="https://www.savefaste.com/blog/pdf-images-layers-metadata-engineering-guide">
+  <meta name="robots" content="index,follow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+
+  <style>
+/* =========================
+   VARIABLES & BASE STYLES
+========================= */
+:root {
+  --accent: #2563eb;
+  --accent-light: #3b82f6;
+  --muted: #6b7280;
+  --text: #111;
+  --bg: #ffffff;
+  --card: #f9fafb;
+  --radius: 10px;
+  --transition: 0.25s ease;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 32px auto;
+  padding: 22px;
+}
+
+/* =========================
+        HEADER
+========================= */
+header.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand img {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius);
+}
+
+.brand .title {
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* =========================
+        TYPOGRAPHY
+========================= */
+h1 {
+  font-size: 32px;
+  margin: 14px 0;
+}
+
+h2 {
+  font-size: 24px;
+  margin: 20px 0 10px;
+}
+
+h3 {
+  font-size: 20px;
+  margin: 16px 0 6px;
+}
+
+p {
+  margin: 12px 0;
+}
+
+/* =========================
+        TABLE OF CONTENTS
+========================= */
+.toc {
+  background: #f8fafc;
+  border-left: 4px solid #e2e8f0;
+  padding: 16px;
+  border-radius: var(--radius);
+  margin: 20px 0;
+}
+
+.toc a {
+  display: block;
+  color: var(--accent);
+  text-decoration: none;
+  margin: 6px 0;
+  transition: var(--transition);
+}
+
+.toc a:hover {
+  color: var(--accent-light);
+  padding-left: 6px;
+}
+
+/* =========================
+        CODE BLOCKS
+========================= */
+pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 14px;
+  border-radius: var(--radius);
+  overflow: auto;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+code {
+  background: #f1f5f9;
+  padding: 3px 6px;
+  border-radius: 6px;
+  font-family: monospace;
+}
+
+/* =========================
+        TABLES
+========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+th, td {
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background: #f1f5f9;
+  font-weight: 600;
+}
+
+/* =========================
+        NOTES
+========================= */
+.note {
+  background: #fff7eb;
+  border-left: 4px solid #f59e0b;
+  padding: 14px;
+  border-radius: var(--radius);
+  margin: 16px 0;
+}
+
+/* =========================
+        BUTTONS
+========================= */
+.btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.btn:hover {
+  background: var(--accent-light);
+}
+
+/* =========================
+        FAQ
+========================= */
+.faq-item {
+  background: var(--card);
+  padding: 16px;
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  transition: var(--transition);
+}
+
+.faq-item:hover {
+  background: #eef2f7;
+}
+
+/* =========================
+        GRID
+========================= */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brand .title {
+    font-size: 19px;
+  }
+}
+
+/* =========================
+        FOOTER
+========================= */
+footer {
+  border-top: 1px solid #e5e7eb;
+  margin-top: 34px;
+  padding-top: 18px;
+  color: var(--muted);
+  font-size: 14px;
+}
+/* Footer */
+footer.site-footer {
+  background: #1f2937;
+  color: #d1d5db;
+  padding: 3rem 1.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-about,
+.footer-links,
+.footer-social {
+  flex: 1 1 250px;
+}
+
+/* Section Titles */
+.footer-about h3,
+.footer-links h3,
+.footer-social h3 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #a5b4fc;
+}
+
+.footer-about p {
+  line-height: 1.5;
+  color: #9ca3af;
+}
+
+/* Links */
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links ul li a {
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #a5b4fc;
+}
+
+/* Social Icons */
+.footer-social .social-icons a {
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: #d1d5db;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.footer-social .social-icons a:hover {
+  color: #a5b4fc;
+}
+
+/* Bottom */
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-social .social-icons a {
+    margin-right: 0.5rem;
+  }
+}
+/* Header */
+header.site-header {
+  background: #fff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #e03e2f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 1px;
+}
+
+/* Navigation Links */
+nav.nav-links a {
+  margin: 0 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #5c4dff;
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+nav.nav-links a:hover {
+  color: #5c4dff;
+}
+
+nav.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Actions (Login / Sign Up buttons) */
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions #loginBtn {
+  text-decoration: none;
+  color: #0077cc;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid #0077cc;
+  border-radius: 6px;
+}
+
+.actions .lang-btn {
+  background: #0077cc;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.actions .lang-btn:hover {
+  background: #005bb5;
+}
+
+/* User Menu */
+#userMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 220px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#userMenu:hover #dropdown {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#dropdown a {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+
+#dropdown a:hover {
+  background: #e0f0ff;
+}
+
+#dropdown svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  fill: #0077cc;
+}
+
+/* Responsive: hide nav on small screens */
+@media (max-width: 768px) {
+  nav.nav-links {
+    display: none;
+  }
+  header.site-header {
+    padding: 1rem;
+  }
+}
+
+</style>
+</head>
+<header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+<img 
+  id="userAvatar" 
+  src="https://i.pinimg.com/564x/1e/1f/af/1e1faf28f4e8ad4cf184b19db9807e21.jpg" 
+  alt="User Avatar" 
+  class="avatar" 
+  style="width:40px; height:40px; border-radius:50%; cursor:pointer;"
+>
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header> 
+<body>
+  <div class="wrap">
+  
+
+    <main class="grid" role="main">
+      <article>
+        <h1>How PDF Stores Images, Layers and Metadata — A Full Engineering Guide</h1>
+        <img src="/static/Design sans titre (14).png">
+        <p class="meta">Comprehensive engineering-level explanation of image XObjects & inline images, filters & compression, Optional Content Groups (OCG/layers), and metadata (info dictionary vs XMP). Practical examples, extraction tips, and optimization strategies for developers and engineers.</p>
+
+        <div class="note"><strong>Quick summary:</strong> PDF stores visual content in structured objects and streams. Images are usually embedded as Image XObjects or inline images and compressed with filters (DCT, JPX, Flate). Layers are implemented via Optional Content Groups (OCG) and Optional Content Configuration (OCMD). Metadata exists both as a legacy info dictionary and a structured XMP packet. This guide explains each part and shows how to inspect, extract, repair and optimize them.</div>
+
+        <!-- Table of contents -->
+        <nav class="toc" aria-label="Table of contents">
+          <strong>Table of contents</strong>
+          <a href="#overview">Overview: why images, layers & metadata matter</a>
+          <a href="#image-objects">Image XObjects & inline images</a>
+          <a href="#filters">Filters & image compression</a>
+          <a href="#color">Color spaces & masks</a>
+          <a href="#layers-ocg">Layers in PDF: Optional Content Groups (OCG)</a>
+          <a href="#metadata">Metadata: Info dictionary vs XMP</a>
+          <a href="#storage">Where objects live: Streams, objects, xref</a>
+          <a href="#extracting">Extracting images & layer-aware rendering</a>
+          <a href="#repairing">Repairing broken image streams & metadata</a>
+          <a href="#optimizing">Optimization: size & performance</a>
+          <a href="#faq">FAQ</a>
+          <a href="#references">References & tools</a>
+        </nav>
+
+        <section id="overview">
+          <h2>Overview — why PDF images, layers and metadata matter</h2>
+          <p>
+            Images and layered content are central to modern PDF workflows: advertising PDFs, architectural plans, maps, and print proofs use multiple layers and high-resolution images. Metadata is critical for searchability, compliance (PDF/A), and automated processing. For any robust PDF processing pipeline (conversion, OCR, repair, archiving), understanding how PDF stores these elements is non-negotiable.
+          </p>
+        </section>
+
+        <section id="image-objects">
+          <h2>Image XObjects & inline images — the two main embedding patterns</h2>
+          <p>
+            PDF represents images using either:
+          </p>
+          <ul>
+            <li><strong>Image XObjects</strong> — separate stream objects that are referenced from page content resources; they are reusable and preferred for large or repeated graphics.</li>
+            <li><strong>Inline images</strong> — image data embedded directly inside the page content stream using the <code>BI ... ID ... EI</code> operators; useful for small, one-off images.</li>
+          </ul>
+
+          <h3>Image XObject: anatomy</h3>
+          <p>
+            An Image XObject is a stream object with a dictionary describing image properties. Typical keys:
+          </p>
+
+
+
+          <p>
+            Important notes:
+            <ul>
+              <li><strong>/Filter</strong> indicates how the stream is encoded (see Filters section).</li>
+              <li><strong>/ColorSpace</strong> may be a name (DeviceRGB) or an object (e.g., ICCBased or indexed color spaces).</li>
+              <li><strong>/Mask</strong> or <strong>/SMask</strong> specify alpha/matte or soft mask information.</li>
+            </ul>
+          </p>
+
+          <h3>Inline images: BI / ID / EI</h3>
+          <p>
+            Inline images appear inside the page content stream. Their grammar is compact but less reusable and sometimes harder to extract programmatically:
+          </p>
+
+
+
+          <p class="note">Inline images are convenient for small icons but are discouraged for large images due to duplication and parsing complexity.</p>
+        </section>
+
+        <section id="filters">
+          <h2>Filters & image compression: Flate, DCT, JPX, JBIG2 and more</h2>
+          <p>
+            Image streams in PDF are often compressed using filters. Filters can be applied singly or in arrays (multiple filters). The most common:
+          </p>
+
+          <table>
+            <thead><tr><th>Filter</th><th>Typical use</th><th>Characteristics</th></tr></thead>
+            <tbody>
+              <tr><td><code>/DCTDecode</code></td><td>JPEG images</td><td>Lossy, small size, ubiquitous</td></tr>
+              <tr><td><code>/JPXDecode</code></td><td>JPEG2000</td><td>Lossy or lossless, better compression at high quality</td></tr>
+              <tr><td><code>/JBIG2Decode</code></td><td>Monochrome scanned images</td><td>Excellent for bi-level scans, complex decoding</td></tr>
+              <tr><td><code>/FlateDecode</code></td><td>PNG-like deflate streams</td><td>Lossless, used for image data and content streams</td></tr>
+              <tr><td><code>/ASCII85Decode / ASCIIHexDecode</code></td><td>ASCII-safe encoding</td><td>Wrap binary for text transport</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Common pitfalls with filters</h3>
+          <p>
+            - Some viewers expect <code>/Length</code> to match exact bytes between <code>stream</code> and <code>endstream</code>. If mismatched, extraction tools may fail.<br>
+            - Chained filters must be applied in the correct order (first listed in the dictionary is applied last when decoding).<br>
+            - JBIG2 streams can reference external symbol dictionaries (lossy segmentation) — extracting them without the dictionary yields gibberish.
+          </p>
+        </section>
+
+        <section id="color">
+          <h2>Color spaces, masks and soft masks (SMask)</h2>
+          <p>
+            Color handling is integral to image fidelity. The <code>/ColorSpace</code> entry can be:
+          </p>
+          <ul>
+            <li>Device color spaces: <code>/DeviceRGB</code>, <code>/DeviceCMYK</code>, <code>/DeviceGray</code></li>
+            <li>Calibrated or ICC-based: <code>/ICCBased</code></li>
+            <li>Indexed color spaces for palettes</li>
+          </ul>
+
+          <h3>Masks and transparency</h3>
+          <p>
+            - <strong>/Mask</strong> (explicit mask) defines binary transparency (cut-out shapes).<br>
+            - <strong>/SMask</strong> is a soft mask stream providing per-pixel alpha values (grayscale).<br>
+            - <strong>/Matte</strong> and blend modes in the page content stream control compositing.
+          </p>
+
+          <p class="note">When converting to other formats (e.g., PDF→PNG), soft masks must be applied to the color image to reconstruct alpha transparency correctly.</p>
+        </section>
+
+        <section id="layers-ocg">
+          <h2>Layers in PDF: Optional Content Groups (OCG) and configuration</h2>
+          <p>
+            Layers in PDF are implemented via Optional Content (OC) — objects that may be visible or hidden according to a configuration. The main parts:
+          </p>
+          <ul>
+            <li><strong>/OCProperties</strong> in the Catalog defines available OCGs and the default configuration.</li>
+            <li><strong>OCG objects</strong> are dictionaries with a <code>/Name</code> and optional properties.</li>
+            <li><strong>Optional Content Membership</strong> is applied to content via marked-content operators (<code>/OC</code> property or layer visibility operations).</li>
+          </ul>
+
+          <h3>OCG example (simplified)</h3>
+
+
+          <p>
+            Content streams reference OCGs using marked content: <code>/OC /OCG << /OC 20 0 R >> BDC ... EMC</code> or via the paint operator with a property list that includes <code>/OC</code>.
+          </p>
+
+          <h3>Use-cases for layers</h3>
+          <ul>
+            <li>Architectural drawings (floors, electrical plans)</li>
+            <li>Map overlays (roads, labels, points of interest)</li>
+            <li>Multilingual print proofs (alternate language layers)</li>
+            <li>Optional annotations and redactions</li>
+          </ul>
+
+          <p class="note">Not all PDF viewers respect OC configurations identically. Tools must read <code>/OCProperties</code> to render layer-aware previews and also consider Optional Content Membership dictionaries for complex behaviors.</p>
+        </section>
+
+        <section id="metadata">
+          <h2>Metadata: Info dictionary vs XMP (XML) packet</h2>
+          <p>
+            PDFs historically carried a simple <strong>Info dictionary</strong> with fields like <code>/Title</code>, <code>/Author</code>, <code>/Subject</code>. Modern PDFs embed rich metadata using XMP (Extensible Metadata Platform), an XML packet stored in a stream and referenced from the catalog (<code>/Metadata</code>).
+          </p>
+
+          <h3>Info dictionary example</h3>
+
+
+          <h3>XMP metadata (recommended)</h3>
+          <p>
+            XMP is a namespaced XML block that can contain Dublin Core, PDF-specific, custom schema, and rights/licensing metadata. It is placed in a metadata stream referenced by the Catalog:
+          </p>
+
+
+
+          <h3>Why XMP matters</h3>
+          <ul>
+            <li>Structured metadata (searchable and machine-readable)</li>
+            <li>Can embed licensing, provenance, timestamps, content classifications</li>
+            <li>Used for PDF/A and archival workflows</li>
+          </ul>
+
+          <p class="note">When migrating or ingesting PDFs, read both Info and XMP. Some generators populate only one; XMP is generally authoritative if present.</p>
+        </section>
+
+        <section id="storage">
+          <h2>Where images, layers and metadata live: objects, streams, and the XRef</h2>
+          <p>
+            PDF files are a set of numbered objects. Streams (binary) are where image bytes and XMP XML live. The cross-reference (XRef) maps object numbers to file offsets. Understanding where to find image data requires parsing the XRef and locating XObject streams referenced by Page resources.
+          </p>
+
+          <h3>Typical lookup flow to find images</h3>
+          <ol>
+            <li>Open Catalog, read Page tree to find target Page object.</li>
+            <li>Inspect Page <code>/Resources /XObject</code> dictionary for image XObject names (e.g., <code>/Im1 10 0 R</code>).</li>
+            <li>Follow reference to the stream object and decode using filters.</li>
+            <li>If <code>/SMask</code> or <code>/ColorSpace</code> references exist, decode those streams too.</li>
+          </ol>
+        </section>
+
+        <section id="extracting">
+          <h2>Extracting images and layer-aware processing</h2>
+          <p>
+            Image extraction must decode filters and apply color profiles and masks. Layer-aware extraction requires interpreting Optional Content Membership and deciding whether to include content from hidden layers.
+          </p>
+
+          <h3>Step-by-step extraction (programmatic)</h3>
+          <ol>
+            <li>Parse XRef to access objects (libraries: qpdf, pdfcpu, PyPDF2, PoDoFo).</li>
+            <li>Find Page → /Resources → /XObject entries.</li>
+            <li>For each XObject where <code>/Subtype /Image</code>, read dictionary to determine filters, color space, bpc (bits per component).</li>
+            <li>Decode filters in order to obtain raw image bytes.</li>
+            <li>Apply ICC profile if <code>/ColorSpace /ICCBased</code> is present to map to sRGB or desired space.</li>
+            <li>Apply soft mask by compositing the SMask into the image as alpha.</li>
+            <li>Save as PNG/JPEG depending on original compression and need for alpha.</li>
+          </ol>
+
+          <p class="note">For JBIG2 and JPX, use native decoders. For chained filters, decode in correct order. Failure to do so results in corrupted extractions.</p>
+        </section>
+
+        <section id="repairing">
+          <h2>Repairing broken image streams, masks and metadata</h2>
+          <p>
+            Repairs fall into two categories: automated rebuilding and manual reconstruction.
+          </p>
+
+          <h3>Automated approaches</h3>
+          <ul>
+            <li>Rebuild XRef with <code>qpdf --rebuild-xref</code> or similar tools to ensure object offsets are correct.</li>
+            <li>Validate and correct stream <code>/Length</code> entries so decoders read proper byte ranges.</li>
+            <li>Attempt filter fallback (e.g., if DCT fails, try treating as JPX if file header suggests JPEG2000).</li>
+            <li>For damaged masks, reconstruct alpha by sampling nearby pixels or re-running OCR/segmentation for scanned content.</li>
+          </ul>
+
+          <h3>Manual & advanced repair</h3>
+          <p>
+            - Use a hex editor to locate stream boundaries and manually extract bytes between <code>stream</code> and <code>endstream</code>. Then try decompressing with zlib (Flate) or JPEG tools.<br>
+            - For missing XMP, reconstruct metadata using Info dictionary and external records. For archival, repackage metadata into a proper XMP stream and update the Catalog reference.<br>
+            - For corrupted JBIG2, you may need the original symbol dictionary; without it, consider raster extraction + OCR.
+          </p>
+
+          <p class="note">SaveFaste's repair pipeline combines XRef rebuilding, stream validation, filter detection heuristics and OCR fallback to maximize recovery success on image-heavy PDFs.</p>
+        </section>
+
+        <section id="optimizing">
+          <h2>Optimization: balance quality, size and performance</h2>
+          <p>
+            For web delivery and fast viewing, consider:
+          </p>
+          <ul>
+            <li><strong>Image recompression:</strong> convert high-resolution images to efficient formats (JPX for photographic content, Flate for lossless line art).</li>
+            <li><strong>Downsampling:</strong> reduce DPI for display PDFs (e.g., 150–200 DPI for on-screen).</li>
+            <li><strong>Font & image deduplication:</strong> reuse XObjects across pages instead of inlining duplicates.</li>
+            <li><strong>Enable linearization:</strong> to support Fast Web View and progressive page rendering.</li>
+          </ul>
+
+          <h3>Automation pattern</h3>
+          <p>
+            A reliable pipeline:
+            <ol>
+              <li>Analyze image content type (text/line art vs photo vs scan).</li>
+              <li>Choose compression & target DPI.</li>
+              <li>Re-encode image stream and update XObject dictionary (new /Filter and /Length).</li>
+              <li>Regenerate XRef and write new PDF.</li>
+            </ol>
+          </p>
+        </section>
+
+        <section id="faq">
+          <h2>FAQ</h2>
+
+          <div class="faq-item">
+            <h3>Q: Are inline images always smaller than image XObjects?</h3>
+            <p>A: No. Inline images are only smaller when the image is tiny; for repeated or large images, XObjects are more efficient due to reuse and separate storage.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q: How can I tell if a PDF uses layers?</h3>
+            <p>A: Inspect the Catalog for an <code>/OCProperties</code> entry. Layer names are defined in OCG objects and can be listed in the configuration dictionary.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q: Why do some extracted images look washed out?</h3>
+            <p>A: Often due to missing ICC profile or incorrect color space handling. Apply embedded ICC profiles (ICCBased) or map DeviceCMYK to sRGB carefully to preserve colors.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q: Is XMP metadata mandatory?</h3>
+            <p>A: No—XMP is recommended and more expressive, but not mandatory. If present, it should be treated as authoritative over the Info dictionary.</p>
+          </div>
+
+        </section>
+
+     
+
+        <footer>
+          <p class="meta">About the author: SaveFaste Engineering — we build privacy-first PDF tools (merge, split, compress, OCR, repair) focused on high fidelity and enterprise workflows. For API or enterprise options contact <a href="mailto:support@savefaste.com">support@savefaste.com</a>.</p>
+          <p><a class="btn" href="https://www.savefaste.com" target="_blank" rel="noopener">Try SaveFaste PDF Repair</a></p>
+        </footer>
+
+      </article>
+
+      <!-- Right column: quick links, mini TOC, SEO tips -->
+      <aside style="padding:8px 16px;background:#fff;border-radius:10px;box-shadow:0 6px 16px rgba(16,24,40,0.04)">
+        <div style="margin-bottom:14px">
+          <strong>On this page</strong>
+          <ul style="padding-left:16px;color:var(--muted);margin-top:8px">
+            <li><a href="#image-objects">Image XObjects</a></li>
+            <li><a href="#layers-ocg">Layers (OCG)</a></li>
+            <li><a href="#metadata">Metadata (XMP)</a></li>
+            <li><a href="#extracting">Extraction tips</a></li>
+          </ul>
+        </div>
+
+      </aside>
+    </main>
+
+    <!-- Structured data (Article + FAQ) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.savefaste.com/blog/pdf-images-layers-metadata-engineering-guide"
+      },
+      "headline": "How PDF Stores Images, Layers and Metadata — A Full Engineering Guide",
+      "description": "Engineering guide: how PDFs embed images, manage layers (OCG), and store metadata (Info vs XMP). Includes extraction, repair, and optimization tips.",
+      "image": "https://www.savefaste.com/images/pdf-images-layers-metadata.png",
+      "author": {
+        "@type": "Organization",
+        "name": "SaveFaste Engineering",
+        "url": "https://www.savefaste.com/about"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SaveFaste",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.savefaste.com/logo.png"
+        }
+      },
+      "datePublished": "2025-12-11",
+      "dateModified": "2025-12-11",
+      "keywords": "PDF images, Optional Content, OCG, XMP, PDF metadata, Image XObject, SaveFaste"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Where are images stored inside a PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Images are usually stored as Image XObject stream objects or as inline images inside content streams. They include a dictionary with keys such as Width, Height, ColorSpace, BitsPerComponent and Filter specifying compression."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are layers implemented in PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PDF uses Optional Content Groups (OCG) and /OCProperties in the Catalog to define layers and configurations. Content can be associated with an OCG so viewers can toggle visibility."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I rely on Info or XMP metadata?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "XMP is the preferred, structured metadata format and should be treated as authoritative if present. The Info dictionary is legacy and simpler."
+          }
+        }
+      ]
+    }
+    </script>
+</div>)pà
+    <footer class="site-footer" aria-label="Footer">
+ <div class="footer-container">
+<div class="footer-about">
+<h3>About savefaste</h3>
+<p>
+ Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+</p>
+</div>
+<div class="footer-links">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/contactus">Contact Us</a></li>
+<li><a href="/aboutus">About Us</a></li>
+<li><a href="/privacypolicy">Privacy Policy</a></li>
+<li><a href="/terms">Terms of Service</a></li>
+</ul>
+</div>
+<div class="footer-social">
+<h3>Follow Us</h3>
+<div class="social-icons">
+<a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+<a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+<a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2025 Savefaste. All rights reserved.</span>
+</div>
+</footer>  
+  
+</body>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const defaultAvatar = "https://i.pinimg.com/564x/1e/1f/af/1e1faf28f4e8ad4cf184b19db9807e21.jpg";
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    // FIX: صورة دائمة حتى لو Firebase لم يُرجع photoURL
+    let photo = user.photoURL;
+    if (!photo || photo === "null" || photo === "undefined") {
+      photo = defaultAvatar;
+    }
+
+    avatar.src = photo;
+    avatar.title = user.displayName || user.email;
+
+    // قائمة المعلومات
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${photo}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    avatar.onclick = (e) => {
+      e.stopPropagation();
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+
+    // صورة افتراضية حتى بدون مستخدم
+    avatar.src = defaultAvatar;
+  }
+});
+</script>
+</html>

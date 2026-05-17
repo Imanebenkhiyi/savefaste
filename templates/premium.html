@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Upgrade to Premium — SaveFaste</title>
+
+<!-- ====== Styles (Premium + polished) ====== -->
+<style>
+:root{
+  --g1:#5b21b6; /* purple */
+  --g2:#0ea5e9; /* cyan */
+  --gold:#f59e0b;
+  --bg:#f3f6fb;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --radius:18px;
+  --shadow: 0 18px 48px rgba(12,18,40,0.12);
+  --glass: rgba(255,255,255,0.85);
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+body{margin:0;background:var(--bg);color:#08122a;-webkit-font-smoothing:antialiased}
+.container{max-width:1200px;margin:36px auto;padding:22px}
+
+/* header */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.brand{display:flex;gap:12px;align-items:center}
+.brand .logo{
+  width:48px;height:48px;border-radius:10px;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  display:flex;align-items:center;justify-content:center;color:white;font-weight:800;box-shadow:0 8px 24px rgba(11,20,60,0.18)
+}
+.brand .name{font-weight:800;font-size:18px}
+.header .sub{color:var(--muted);font-weight:600}
+
+/* panel */
+.panel{display:flex;gap:28px;background:linear-gradient(135deg,var(--g1),var(--g2));border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
+.hero{flex:1;padding:54px;color:white;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.hero h1{font-size:44px;margin:0;line-height:1}
+.hero p{opacity:.95;max-width:520px;font-size:16px}
+.hero .media{margin-top:6px;border-radius:14px;overflow:hidden;box-shadow:0 20px 50px rgba(8,10,30,0.28)}
+
+/* pricing */
+.pricing{flex:1;padding:36px;background:transparent;display:flex;flex-direction:column;justify-content:center}
+.title{font-size:26px;font-weight:800;margin-bottom:6px;color:#f8fafc}
+.subtitle{color:rgba(248,250,252,0.9);margin-bottom:18px}
+
+/* card container (glass) */
+.glass{background:var(--glass);backdrop-filter: blur(6px);border-radius:14px;padding:18px;box-shadow:0 10px 30px rgba(2,6,23,0.06);border:1px solid rgba(255,255,255,0.12)}
+
+/* plans */
+.plans{display:flex;gap:16px;margin-bottom:18px}
+.plan{flex:1;background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.98));border-radius:12px;padding:18px;box-shadow:0 8px 28px rgba(2,6,23,0.06);cursor:pointer;transition:all .18s;border:1px solid rgba(7,10,15,0.04)}
+.plan:hover{transform:translateY(-6px)}
+.plan.active{outline:4px solid rgba(14,165,233,0.12);transform:translateY(-8px);box-shadow:0 24px 60px rgba(8,10,30,0.18)}
+.plan .badge{display:inline-block;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg,var(--g1),var(--g2));color:white;font-weight:700;font-size:12px;margin-bottom:10px}
+.plan .price{font-weight:900;font-size:30px;color:#0b1320}
+.plan .term{color:var(--muted);font-weight:700;margin-top:6px}
+.plan ul{margin-top:12px;padding-left:18px;color:#243447}
+
+/* payment method selector */
+.pay-method{display:flex;gap:12px;align-items:center;margin-top:12px}
+.pay-option{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;background:var(--card);cursor:pointer;border:1px solid rgba(7,10,15,0.04);transition:all .14s}
+.pay-option.active{box-shadow:0 12px 40px rgba(14,165,233,0.12);transform:translateY(-4px)}
+.pay-option svg{width:20px;height:20px}
+
+/* card form */
+.card-form{margin-top:14px;background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(7,10,15,0.04);box-shadow:0 10px 30px rgba(2,6,23,0.06)}
+.field{margin-bottom:10px}
+.field-title{font-size:13px;color:var(--muted);margin-bottom:6px}
+.stripe-element{padding:12px;border:1px solid #e6e9ef;border-radius:10px}
+
+/* actions */
+.actions{display:flex;gap:10px;margin-top:12px}
+.btn{padding:12px 16px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
+.btn.primary{background:linear-gradient(90deg,var(--g1),var(--g2));color:#fff;box-shadow:0 8px 30px rgba(11,20,60,0.12)}
+.btn.ghost{background:transparent;border:1px solid rgba(7,10,15,.06)}
+
+/* small helpers */
+.note{font-size:13px;color:var(--muted);margin-top:10px;text-align:center}
+.msg{margin-top:10px;font-weight:700;color:#b91c1c}
+
+/* responsive */
+@media(max-width:960px){
+  .panel{flex-direction:column}
+  .plans{flex-direction:column}
+  .hero h1{font-size:32px}
+  .hero .media {
+  display: none; /* الصورة تختفي على الشاشات الصغيرة */
+}
+
+}
+</style>
+
+<!-- Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<div class="container">
+
+  <!-- header -->
+  <div class="header">
+    <div class="brand">
+      <div class="logo">SF</div>
+      <div class="name">SaveFaste</div>
+    </div>
+    <div class="sub">Upgrade — unlimited PDF tools</div>
+  </div>
+
+  <!-- main panel -->
+  <div class="panel" role="region" aria-label="Upgrade panel">
+
+    <!-- left hero -->
+    <div class="hero">
+      <h1>Upgrade to Premium</h1>
+      <p>Unlimited conversions, faster compression, watermark-free exports and priority support. Save more with the yearly plan and enjoy pro features for power users.</p>
+
+      <div class="media">
+        <!-- example decorative image -->
+        <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=6c9b1d4c7b3c8f9f5b1a1a1d1b1c1d1e" alt="illustration" style="width:100%;display:block">
+      </div>
+    </div>
+
+    <!-- right pricing & payment -->
+    <div class="pricing">
+      <div class="title">Choose your plan</div>
+      <div class="subtitle">Monthly or Yearly — secure checkout with Card or PayPal</div>
+
+      <div class="glass">
+        <!-- plans -->
+        <div class="plans" id="plans">
+          <div class="plan active" data-plan="monthly" id="plan-monthly" tabindex="0" role="button" aria-pressed="true">
+            <div class="badge" style="display:none">Popular</div>
+            <div class="price">$4</div>
+            <div class="term">per month</div>
+            <ul>
+              <li>Unlimited PDF conversions</li>
+              <li>Fast compression & merge</li>
+              <li>No watermark</li>
+              <li>Email support</li>
+            </ul>
+          </div>
+
+          <div class="plan" data-plan="yearly" id="plan-yearly" tabindex="0" role="button" aria-pressed="false">
+            <div class="badge">Best value</div>
+            <div class="price">$40</div>
+            <div class="term">per year</div>
+            <ul>
+              <li>Everything in Monthly</li>
+              <li>Priority support</li>
+              <li>Exclusive yearly features</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- payment method -->
+        <div style="margin-top:14px">
+          <div style="font-weight:800;margin-bottom:8px">Payment method</div>
+          <div class="pay-method" role="tablist" aria-label="Payment method">
+            <div class="pay-option active" id="opt-card" data-method="card" role="tab" tabindex="0" aria-selected="true">
+              <!-- card SVG -->
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden><rect x="1" y="4" width="22" height="14" rx="2" stroke="#0b1320" stroke-width="1.2"/><rect x="3" y="8" width="6" height="2" fill="#0b1320"/></svg>
+              <div style="font-weight:700">Card</div>
+            </div>
+
+            <div class="pay-option" id="opt-paypal" data-method="paypal" role="tab" tabindex="0" aria-selected="false">
+              <!-- paypal SVG -->
+              <svg viewBox="0 0 24 24" aria-hidden>
+                <path d="M5.5 18.5c.2-1.7 1.7-8.1 1.7-8.1s.2-.9 1.4-1.1c1.2-.2 6.6-.5 6.6-.5s1.9-.2 2.6 1.6c.7 1.8 1.3 3.9 1.3 3.9s1.1 4.3-.2 6.2c-1.4 1.9-3.9 2.5-7 2.5-3.1 0-6.4-.8-6.4-.8s-.9-.2-1.2-2.7z" fill="#003087"/>
+                <path d="M8 7.8c.1-.6.9-1 1.6-1h9.2c.7 0 1.1.4 1 1l-.6 3.4c0 .3-.3.5-.7.5H8.8C8 11.7 7.9 8.3 8 7.8z" fill="#009cde"/>
+              </svg>
+              <div style="font-weight:700">PayPal</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- single card form -->
+        <div class="card-form" id="card-area" aria-hidden="false">
+          <div class="field">
+            <div class="field-title">Card number</div>
+            <div id="card-number" class="stripe-element"></div>
+          </div>
+
+          <div style="display:flex;gap:10px">
+            <div style="flex:1">
+              <div class="field-title">Expiry</div>
+              <div id="card-exp" class="stripe-element"></div>
+            </div>
+            <div style="flex:1">
+              <div class="field-title">CVC</div>
+              <div id="card-cvc" class="stripe-element"></div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="pay-card" class="btn primary">Pay with Card</button>
+            <button id="clear-card" class="btn ghost">Clear</button>
+          </div>
+
+          <div id="card-msg" class="msg" role="alert" aria-live="polite"></div>
+        </div>
+
+        <!-- PayPal area -->
+        <div id="paypal-area" class="paypal-wrap" style="display:none;margin-top:12px">
+          <div id="paypal-buttons"></div>
+          <div id="paypal-msg" class="msg" style="display:none"></div>
+        </div>
+
+        <div class="note">You will be redirected after a successful payment. Use test keys in sandbox mode for testing.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== JS: Stripe Elements + PayPal + polished UI ====== -->
+<script>
+/* state */
+let currentPlan = 'monthly';
+let currentMethod = 'card';
+let stripe = null;
+let elements = null;
+let cardNumber, cardExp, cardCvc;
+let paypalScriptEl = null;
+
+/* helpers */
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+/* UI elements */
+const plans = $$('.plan');
+const optCard = $('#opt-card');
+const optPayPal = $('#opt-paypal');
+const cardArea = $('#card-area');
+const paypalArea = $('#paypal-area');
+const cardMsg = $('#card-msg');
+const payCardBtn = $('#pay-card');
+const clearCardBtn = $('#clear-card');
+
+/* plan selection */
+plans.forEach(p => {
+  p.addEventListener('click', () => selectPlan(p.dataset.plan, p));
+  p.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') selectPlan(p.dataset.plan, p); });
+});
+function selectPlan(plan, el){
+  currentPlan = plan;
+  plans.forEach(x => x.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+
+/* payment method */
+optCard.addEventListener('click', () => chooseMethod('card'));
+optPayPal.addEventListener('click', () => chooseMethod('paypal'));
+function chooseMethod(m){
+  currentMethod = m;
+  if(m === 'card'){
+    optCard.classList.add('active'); optPayPal.classList.remove('active');
+    cardArea.style.display = ''; paypalArea.style.display = 'none';
+  } else {
+    optPayPal.classList.add('active'); optCard.classList.remove('active');
+    cardArea.style.display = 'none'; paypalArea.style.display = '';
+  }
+}
+
+/* load stripe config */
+async function loadStripeConfig(){
+  try{
+    const r = await fetch('/stripe-config');
+    const cfg = await r.json();
+    if(!cfg.publishableKey) throw new Error('Missing publishableKey');
+    stripe = Stripe(cfg.publishableKey);
+
+    elements = stripe.elements({ appearance: { theme: 'stripe' } });
+    cardNumber = elements.create('cardNumber', { showIcon: true });
+    cardExp = elements.create('cardExpiry');
+    cardCvc = elements.create('cardCvc');
+
+    cardNumber.mount('#card-number');
+    cardExp.mount('#card-exp');
+    cardCvc.mount('#card-cvc');
+
+    cardMsg.textContent = '';
+  }catch(e){
+    console.error('Stripe config error', e);
+    cardMsg.textContent = 'Stripe configuration failed. See console.';
+  }
+}
+
+/* handle pay with card */
+payCardBtn.addEventListener('click', async () => {
+  cardMsg.textContent = ''; payCardBtn.disabled = true; payCardBtn.textContent = 'Processing...';
+  try{
+    const { paymentMethod, error } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardNumber,
+      billing_details: { name: 'Customer' }
+    });
+
+    if(error){
+      cardMsg.textContent = error.message || 'Payment failed';
+      payCardBtn.disabled = false; payCardBtn.textContent = 'Pay with Card';
+      return;
+    }
+
+    // send to server to create subscription
+    const res = await fetch('/create-stripe-subscription', {
+      method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ plan: currentPlan })
+    });
+    const result = await res.json();
+
+    if(result.error){
+      cardMsg.textContent = result.error;
+      payCardBtn.disabled = false; payCardBtn.textContent = 'Pay with Card';
+      return;
+    }
+
+    window.location.href = '/success.html';
+
+  }catch(e){
+    console.error(e);
+    cardMsg.textContent = 'Unexpected error. See console.';
+    payCardBtn.disabled = false; payCardBtn.textContent = 'Pay with Card';
+  }
+});
+
+/* clear card */
+clearCardBtn.addEventListener('click', () => {
+  try{ cardNumber.clear(); cardExp.clear(); cardCvc.clear(); }catch(e){}
+  cardMsg.textContent = '';
+});
+
+/* init paypal buttons */
+async function initPayPalButtons(){
+  try{
+    if(paypalScriptEl){ paypalScriptEl.remove(); paypalScriptEl = null; document.getElementById('paypal-buttons').innerHTML = ''; }
+
+    const r = await fetch('/paypal-client-id');
+    const d = await r.json();
+    if(!d.clientId){ $('#paypal-msg').style.display=''; $('#paypal-msg').textContent = 'PayPal not configured'; return; }
+
+    paypalScriptEl = document.createElement('script');
+    paypalScriptEl.src = `https://www.paypal.com/sdk/js?client-id=${d.clientId}&vault=true&intent=subscription&components=buttons`;
+    paypalScriptEl.onload = () => {
+      paypal.Buttons({
+        style:{layout:'vertical',shape:'rect',label:'subscribe'},
+        createSubscription: function(data, actions){
+          return fetch('/create-paypal-subscription', {
+            method:'POST', headers:{ 'Content-Type':'application/json' },
+            body: JSON.stringify({ plan: currentPlan })
+          })
+          .then(res => res.json())
+          .then(json => {
+            if(!json.subscriptionId) throw new Error('No subscriptionId');
+            return json.subscriptionId;
+          });
+        },
+        onApprove: function(data){
+          window.location.href = '/success.html?paypal=' + data.subscriptionID;
+        },
+        onError: function(err){
+          console.error('PayPal error', err);
+          $('#paypal-msg').style.display=''; $('#paypal-msg').textContent = 'PayPal error. Check console.';
+        }
+      }).render('#paypal-buttons');
+    };
+    document.head.appendChild(paypalScriptEl);
+    $('#paypal-msg').style.display='none';
+  }catch(e){
+    console.error('initPayPalButtons', e);
+    $('#paypal-msg').style.display=''; $('#paypal-msg').textContent = 'Failed to load PayPal.';
+  }
+}
+
+/* init on load */
+window.addEventListener('load', async () => {
+  selectPlan('monthly', $('#plan-monthly'));
+  chooseMethod('card');
+  await loadStripeConfig();
+  await initPayPalButtons();
+});
+</script>
+
+</body>
+</html>

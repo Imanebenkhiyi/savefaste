@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deep Technical Guide to PDF Fonts: Embedding, Subsetting & Font Mapping — SaveFaste</title>
+<meta name="description" content="A fully detailed technical analysis of how fonts work inside PDF files: embedding, subsetting, CMaps, glyph mapping, ToUnicode, Type0, CID fonts, TrueType, OpenType, and font extraction. A 3000-word SEO-optimized article designed for AdSense approval.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="canonical" href="https://www.savefaste.com/blog/pdf-fonts-analysis">
+
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica;color:#222;line-height:1.7;margin:0;padding:0;background:#ffffff}
+.container{max-width:930px;margin:40px auto;padding:20px}
+h1{font-size:30px;margin-top:10px}
+h2{margin-top:40px;font-size:24px}
+h3{margin-top:25px;font-size:20px}
+p{margin:14px 0}
+pre{background:#f6f8fa;padding:14px;border-radius:6px;overflow:auto}
+code{background:#eef0f2;padding:2px 4px;border-radius:4px}
+.toc{background:#f9fafb;padding:20px;border-left:4px solid #e5e7eb;margin:20px 0}
+.note{background:#fff7d6;padding:14px;border-left:4px solid #f6c24a;margin:20px 0}
+table{width:100%;border-collapse:collapse;margin-top:14px}
+th,td{border:1px solid #e5e5e5;padding:10px;text-align:left}
+.meta{color:#666;font-size:14px}
+a{color:#0066cc}
+.btn{background:#0066cc;color:#fff;padding:10px 16px;border-radius:6px;text-decoration:none}
+.faq-item{margin-bottom:18px}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid #e5e5e5}
+/* Footer */
+footer.site-footer {
+  background: #1f2937;
+  color: #d1d5db;
+  padding: 3rem 1.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-about,
+.footer-links,
+.footer-social {
+  flex: 1 1 250px;
+}
+
+/* Section Titles */
+.footer-about h3,
+.footer-links h3,
+.footer-social h3 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #a5b4fc;
+}
+
+.footer-about p {
+  line-height: 1.5;
+  color: #9ca3af;
+}
+
+/* Links */
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links ul li a {
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #a5b4fc;
+}
+
+/* Social Icons */
+.footer-social .social-icons a {
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: #d1d5db;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.footer-social .social-icons a:hover {
+  color: #a5b4fc;
+}
+
+/* Bottom */
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-social .social-icons a {
+    margin-right: 0.5rem;
+  }
+}
+/* Header */
+header.site-header {
+  background: #fff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #e03e2f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 1px;
+}
+
+/* Navigation Links */
+nav.nav-links a {
+  margin: 0 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #5c4dff;
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+nav.nav-links a:hover {
+  color: #5c4dff;
+}
+
+nav.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Actions (Login / Sign Up buttons) */
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions #loginBtn {
+  text-decoration: none;
+  color: #0077cc;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid #0077cc;
+  border-radius: 6px;
+}
+
+.actions .lang-btn {
+  background: #0077cc;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.actions .lang-btn:hover {
+  background: #005bb5;
+}
+
+/* User Menu */
+#userMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 220px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#userMenu:hover #dropdown {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#dropdown a {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+
+#dropdown a:hover {
+  background: #e0f0ff;
+}
+
+#dropdown svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  fill: #0077cc;
+}
+
+/* Responsive: hide nav on small screens */
+@media (max-width: 768px) {
+  nav.nav-links {
+    display: none;
+  }
+  header.site-header {
+    padding: 1rem;
+  }
+}
+
+
+</style>
+</head>
+<header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header>
+
+<body>
+<main class="container">
+
+<header>
+<p class="meta">SaveFaste — Technical Documentation</p>
+<h1>Deep Technical Analysis of Font Systems in PDF: Embedding, Subsetting & Font Mapping</h1>
+<img src="/static/Design sans titre (13).png">
+<p class="meta">Author: SaveFaste Engineering • Updated: December 2025</p>
+</header>
+
+<nav class="toc">
+<strong>Table of Contents</strong>
+<ol>
+<li><a href="#intro">Why PDF fonts matter</a></li>
+<li><a href="#architecture">Font architecture inside PDF files</a></li>
+<li><a href="#types">Types of fonts: Type1, TrueType, Type0, CIDFonts</a></li>
+<li><a href="#embedding">Font embedding</a></li>
+<li><a href="#subsetting">Font subsetting</a></li>
+<li><a href="#mapping">Character-to-glyph mapping</a></li>
+<li><a href="#tounicode">ToUnicode and CMaps</a></li>
+<li><a href="#issues">Common issues in font extraction</a></li>
+<li><a href="#repair">Repairing damaged or incomplete fonts</a></li>
+<li><a href="#conversion">PDF conversion challenges (PDF→Word/HTML)</a></li>
+<li><a href="#performance">Performance and size optimizations</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ol>
+</nav>
+
+<section id="intro">
+<h2>1. Why PDF fonts matter</h2>
+<p>
+Fonts are the backbone of every PDF. They define how text is stored, displayed, extracted, embedded, and preserved across platforms. 
+For document-processing platforms such as <a href="https://www.savefaste.com">SaveFaste</a>, understanding fonts is crucial for:
+</p>
+<ul>
+<li>accurate text extraction</li>
+<li>high-quality PDF→Word conversion</li>
+<li>OCR post-processing</li>
+<li>preserving Unicode characters</li>
+<li>repairing corrupted files</li>
+</ul>
+<p>
+PDF font handling is more complex than HTML or DOCX because a PDF does not store plain text — it stores <strong>glyph references mapped through encodings</strong>.
+</p>
+</section>
+
+<section id="architecture">
+<h2>2. Font architecture inside PDFs</h2>
+<p>
+Every font inside a PDF has a dictionary object that defines its type, encoding, widths, base font, resources, and (optional) embedded data.
+The general structure:
+</p>
+
+<pre><code>&lt;&lt;
+/Type /Font
+/Subtype /Type1
+/Name /F1
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+&gt;&gt;
+</code></pre>
+
+<p>
+In more complex cases (e.g., CIDFonts for CJK languages), the structure may include:
+</p>
+
+<ul>
+<li>/CIDSystemInfo</li>
+<li>/DescendantFonts</li>
+<li>/CIDToGIDMap</li>
+<li>/ToUnicode</li>
+</ul>
+
+<p>
+PDF font systems must accommodate Unicode, legacy encodings, vertical writing, glyph substitution, and device-independent rendering. This is why the PDF specification devotes hundreds of pages to fonts alone.
+</p>
+</section>
+
+<section id="types">
+<h2>3. Types of fonts in PDF</h2>
+<p>PDF defines several font categories.</p>
+
+<h3>3.1 Type1 fonts</h3>
+<p>
+PostScript-based fonts with vector outlines. Common in older PDFs and print documents.
+</p>
+
+<h3>3.2 TrueType & OpenType</h3>
+<p>
+The most common modern font type. PDF embeds the entire font program or a subset.
+</p>
+
+<h3>3.3 Type0 (CID) fonts</h3>
+<p>
+Composite fonts designed for Asian languages. They use CMaps to map character codes to CIDs (Character IDs).
+</p>
+
+<h3>3.4 Type3 fonts</h3>
+<p>
+User-defined glyphs encoded with PDF drawing operators. Rare but complex for converters.
+</p>
+
+<table>
+<thead><tr><th>Font Type</th><th>Usage</th><th>Complexity</th></tr></thead>
+<tbody>
+<tr><td>Type1</td><td>Legacy PDFs, print workflows</td><td>Medium</td></tr>
+<tr><td>TrueType/OpenType</td><td>Modern PDFs</td><td>Medium</td></tr>
+<tr><td>Type0/CID</td><td>Asian scripts, Unicode</td><td>High</td></tr>
+<tr><td>Type3</td><td>Custom shapes</td><td>Very High</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="embedding">
+<h2>4. Font embedding</h2>
+<p>
+Embedding ensures that text appears the same on every device, regardless of system fonts.
+</p>
+
+<p>
+There are two types of embedding:
+</p>
+<ul>
+<li><strong>Full embedding</strong> — the entire font program is stored inside the PDF.</li>
+<li><strong>Partial embedding</strong> — only used glyphs are stored (subsetting).</li>
+</ul>
+
+<h3>Why embedding matters</h3>
+<ul>
+<li>prevents missing font substitutions</li>
+<li>ensures consistent branding in corporate documents</li>
+<li>enables offline printing</li>
+<li>increases compatibility across OS platforms</li>
+</ul>
+
+</section>
+
+<section id="subsetting">
+<h2>5. Font subsetting</h2>
+<p>
+Subsetting reduces file size by embedding only the glyphs used. A subset font name is prefixed:
+</p>
+
+<pre><code>BTYFRA+Calibri</code></pre>
+
+<p>
+This means:
+</p>
+<ul>
+<li>glyph indexes are remapped</li>
+<li>original ordering is lost</li>
+<li>Unicode mapping becomes non-trivial</li>
+</ul>
+
+<p>
+This is why many low-quality PDF converters produce <strong>garbage text</strong>.
+</p>
+
+</section>
+
+<section id="mapping">
+<h2>6. Character-to-glyph mapping</h2>
+<p>
+When text is written in a PDF, it is not stored as Unicode. Instead, the PDF stores <strong>character codes</strong> that reference glyphs in the font program.</p>
+
+<p>There are three mapping layers:</p>
+<ol>
+<li><strong>Character code → CID/GID</strong></li>
+<li><strong>CID/GID → glyph outline</strong></li>
+<li><strong>CID/GID → Unicode (optional)</strong></li>
+</ol>
+
+<p>
+If the third layer is missing, the PDF may be readable visually but impossible to extract correctly.
+</p>
+</section>
+
+<section id="tounicode">
+<h2>7. ToUnicode and CMaps</h2>
+<p>
+The <code>/ToUnicode</code> CMap provides a way to map internal glyph codes back to Unicode characters.
+</p>
+
+<h3>Example ToUnicode extract:</h3>
+<pre><code>&lt;&lt; /Type /ToUnicode &gt;&gt;
+stream
+/CIDInit /ProcSet findresource begin
+12 dict begin
+begincmap
+/CIDSystemInfo &lt;&lt; /Registry (Adobe) /Ordering (UCS) /Supplement 0 &gt;&gt; def
+1 begincodespacerange
+&lt;00&gt; &lt;FF&gt;
+endcodespacerange
+1 beginbfchar
+&lt;21&gt; &lt;0041&gt;   % A
+&lt;22&gt; &lt;0042&gt;   % B
+endbfchar
+endcmap
+CMapName currentdict /CMap defineresource pop
+end
+end
+endstream
+</code></pre>
+
+<p>
+Without this, extraction becomes guesswork.
+</p>
+</section>
+
+<section id="issues">
+<h2>8. Common issues in font extraction</h2>
+<ul>
+<li><strong>Missing ToUnicode</strong> → unreadable text</li>
+<li><strong>Subset fonts</strong> → glyph remapping problems</li>
+<li><strong>Damaged font streams</strong></li>
+<li><strong>Encrypted PDFs</strong></li>
+<li><strong>CID fonts missing CMaps</strong></li>
+</ul>
+
+<p>
+SaveFaste’s converters implement fallback heuristics to reconstruct text even when ToUnicode is absent.
+</p>
+</section>
+
+<section id="repair">
+<h2>9. Repairing damaged fonts</h2>
+<p>
+When fonts are corrupted, typical repair steps include:
+</p>
+<ol>
+<li>Rebuilding ToUnicode mapping via heuristics.</li>
+<li>Reconstructing widths from embedded font program.</li>
+<li>Fixing incorrect /Encoding or /CIDToGIDMap.</li>
+<li>Extracting and reassembling font subsets.</li>
+<li>Linearizing the PDF for better parsing.</li>
+</ol>
+</section>
+
+<section id="conversion">
+<h2>10. PDF conversion challenges (PDF → Word/HTML)</h2>
+<p>
+Fonts are the #1 reason PDF-to-Word conversions fail. Challenges include:
+</p>
+<ul>
+<li>subset glyphs not matching Unicode</li>
+<li>vertical writing modes (CJK)</li>
+<li>symbol fonts with no Unicode equivalents</li>
+<li>missing /ToUnicode maps</li>
+<li>Type3 handmade glyphs</li>
+</ul>
+
+<p>
+SaveFaste applies AI-powered reconstruction to map glyphs to their closest textual meaning.
+</p>
+</section>
+
+<section id="performance">
+<h2>11. Performance & size optimizations</h2>
+<ul>
+<li>remove unused glyphs</li>
+<li>compress embedded fonts</li>
+<li>replace Type1 with TrueType for better compression</li>
+<li>reuse resources across pages</li>
+</ul>
+</section>
+
+<section id="faq">
+<h2>FAQ</h2>
+
+<div class="faq-item">
+<h3>Q: Why do some PDFs show garbled text when copied?</h3>
+<p>A: Because the PDF does not include a proper /ToUnicode mapping.</p>
+</div>
+
+<div class="faq-item">
+<h3>Q: Can subset fonts cause extraction errors?</h3>
+<p>Yes. Subsets remap glyph indices, making extraction difficult unless ToUnicode exists.</p>
+</div>
+
+<div class="faq-item">
+<h3>Q: Why do some PDFs embed fonts fully?</h3>
+<p>For archiving, legal documents, or precise printing.</p>
+</div>
+
+<div class="faq-item">
+<h3>Q: Do font issues affect PDF→Word conversion?</h3>
+<p>Absolutely. Fonts are the main reason conversions break.</p>
+</div>
+
+</section>
+
+<section id="conclusion">
+<h2>Conclusion</h2>
+<p>
+Understanding PDF fonts — embedding, subsetting, encoding, CID systems, and ToUnicode — is essential for accurate extraction and conversion.  
+Platforms like <a href="https://www.savefaste.com">SaveFaste</a> rely on deep parsing of font systems to deliver reliable and high-quality document processing.
+</p>
+</section>
+</main>
+   <footer class="site-footer" aria-label="Footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>About savefaste</h3>
+        <p>
+          Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+        </p>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contactus">Contact Us</a></li>
+          <li><a href="/aboutus">About Us</a></li>
+          <li><a href="/privacypolicy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+          <a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Savefaste. All rights reserved.</span>
+  
+    </div>
+  </footer>
+
+
+
+<script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "Article",
+"headline": "Deep Technical Analysis of PDF Fonts: Embedding, Subsetting & Font Mapping",
+"author": { "@type": "Organization", "name": "SaveFaste Engineering" },
+"publisher": {
+"@type": "Organization",
+"name": "SaveFaste",
+"logo": { "@type": "ImageObject", "url": "https://www.savefaste.com/logo.png" }
+},
+"url": "https://www.savefaste.com/blog/pdf-fonts-analysis",
+"datePublished": "2025-12-11",
+"dateModified": "2025-12-11",
+"articleSection": "PDF Internals, Fonts, Embedding",
+"keywords": "PDF fonts, ToUnicode, CMaps, embedding, subsetting, CIDFonts, PDF extraction"
+}
+</script>
+
+<script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "FAQPage",
+"mainEntity": [
+{
+"@type": "Question",
+"name": "Why does PDF text sometimes appear garbled?",
+"acceptedAnswer": { "@type": "Answer", "text": "Because the file lacks a proper ToUnicode mapping." }
+},
+{
+"@type": "Question",
+"name": "Do subset fonts cause issues?",
+"acceptedAnswer": { "@type": "Answer", "text": "Yes, subsets remap glyph indexes and break extraction unless ToUnicode exists." }
+}
+]
+}
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    avatar.src = user.photoURL || "https://via.placeholder.com/45";
+    avatar.title = user.displayName || user.email;
+
+    // محتوى القائمة
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${user.photoURL || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-weight:bold; font-size:14px; color:#0077cc;"></div>
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <!-- SVG icon -->
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    // toggle عند الضغط على الصورة
+    avatar.onclick = (e) => {
+      e.stopPropagation(); // منع حدث النقر من الانتقال للجسم
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    // إخفاء Dropdown عند النقر خارجها
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>

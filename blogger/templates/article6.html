@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="icon" type="image/png" href="/static/favicon.png">
+<meta charset="utf-8">
+<title>How to Merge PDF with Signatures, Stamps, and Scanned Documents — Complete Guide</title>
+<meta name="description" content="Learn how to merge PDFs containing signatures, stamps, and scanned documents without losing quality or breaking digital signatures. Step-by-step guide, tools, best practices, and troubleshooting.">
+<meta name="keywords" content="merge PDF with signatures, combine scanned PDFs, preserve digital signature PDF, PDF stamps merge, PDF merging guide">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://www.savefaste.com/blog/merge-pdf-signatures-scanned">
+<meta name="robots" content="index,follow">
+
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.7;color:#111;margin:0;padding:0;background:#fff}
+  .container{max-width:980px;margin:28px auto;padding:22px}
+  header{margin-bottom:14px}
+  h1{font-size:28px;margin:6px 0}
+  h2{font-size:20px;margin:18px 0 8px}
+  h3{font-size:16px;margin:12px 0}
+  p{margin:10px 0}
+  a{color:#0066cc}
+  .toc{background:#f8fafc;padding:14px;border-left:4px solid #e6eef8;margin:12px 0}
+  .toc a{display:block;margin:6px 0}
+  pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow:auto}
+  code{font-family:monospace;background:#f3f4f6;padding:2px 6px;border-radius:4px}
+  table{width:100%;border-collapse:collapse;margin:12px 0}
+  th,td{border:1px solid #e6e9ee;padding:10px;text-align:left}
+  .note{background:#fff8e6;border-left:4px solid #f1c232;padding:10px;margin:12px 0}
+  .btn{display:inline-block;padding:10px 14px;border-radius:6px;background:#0066cc;color:#fff;text-decoration:none}
+  .meta{font-size:13px;color:#555;margin-bottom:6px}
+  footer{margin-top:22px;border-top:1px solid #eee;padding-top:12px;color:#555;font-size:13px}
+  .faq-item{margin-bottom:12px;padding:10px;border-radius:6px;background:#fbfdff;border:1px solid #eef6ff}
+  /* Footer */
+footer.site-footer {
+  background: #1f2937;
+  color: #d1d5db;
+  padding: 3rem 1.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-about,
+.footer-links,
+.footer-social {
+  flex: 1 1 250px;
+}
+
+/* Section Titles */
+.footer-about h3,
+.footer-links h3,
+.footer-social h3 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #a5b4fc;
+}
+
+.footer-about p {
+  line-height: 1.5;
+  color: #9ca3af;
+}
+
+/* Links */
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links ul li a {
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #a5b4fc;
+}
+
+/* Social Icons */
+.footer-social .social-icons a {
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: #d1d5db;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.footer-social .social-icons a:hover {
+  color: #a5b4fc;
+}
+
+/* Bottom */
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-social .social-icons a {
+    margin-right: 0.5rem;
+  }
+}
+/* Header */
+header.site-header {
+  background: #fff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #e03e2f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 1px;
+}
+
+/* Navigation Links */
+nav.nav-links a {
+  margin: 0 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #5c4dff;
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+nav.nav-links a:hover {
+  color: #5c4dff;
+}
+
+nav.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Actions (Login / Sign Up buttons) */
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions #loginBtn {
+  text-decoration: none;
+  color: #0077cc;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid #0077cc;
+  border-radius: 6px;
+}
+
+.actions .lang-btn {
+  background: #0077cc;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.actions .lang-btn:hover {
+  background: #005bb5;
+}
+
+/* User Menu */
+#userMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 220px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#userMenu:hover #dropdown {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#dropdown a {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+
+#dropdown a:hover {
+  background: #e0f0ff;
+}
+
+#dropdown svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  fill: #0077cc;
+}
+
+/* Responsive: hide nav on small screens */
+@media (max-width: 768px) {
+  nav.nav-links {
+    display: none;
+  }
+  header.site-header {
+    padding: 1rem;
+  }
+}
+
+</style>
+</head>
+ <header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header>
+<body>
+<main class="container">
+
+<header>
+<p class="meta">SaveFaste — PDF Engineering Guides</p>
+<h1>How to Merge PDF with Signatures, Stamps, and Scanned Documents (Complete Technical Guide)</h1>
+<img src="/static/Design sans titre (15).png">
+<p class="meta">Updated: 2026</p>
+</header>
+
+<nav class="toc">
+<strong>Table of contents</strong>
+<a href="#intro">Introduction</a>
+<a href="#challenge">Why merging signed/scanned PDFs is difficult</a>
+<a href="#types">Types of signatures & stamps</a>
+<a href="#scanned">Understanding scanned PDFs</a>
+<a href="#basic">Basic merge methods</a>
+<a href="#advanced">Advanced techniques</a>
+<a href="#signature">Preserving digital signatures</a>
+<a href="#tools">Best tools</a>
+<a href="#workflow">Professional workflow</a>
+<a href="#errors">Common problems</a>
+<a href="#faq">FAQ</a>
+</nav>
+
+<section id="intro">
+<h2>Introduction</h2>
+<p>
+Merging PDF files sounds simple — drag, drop, combine — but things become significantly more complex when the documents include digital signatures, stamps, or scanned pages. These elements introduce structural and legal constraints that can break the integrity of the document if not handled properly.
+</p>
+
+<p>
+This guide provides a deep technical and practical explanation of how to merge PDFs safely while preserving:
+</p>
+
+<ul>
+<li>Digital signatures validity</li>
+<li>Visual stamps and annotations</li>
+<li>Scanned image quality</li>
+<li>Text layers and OCR data</li>
+</ul>
+
+<div class="note">
+<strong>Important:</strong> Merging a signed PDF incorrectly can invalidate the signature permanently.
+</div>
+</section>
+
+<section id="challenge">
+<h2>Why Merging Signed or Scanned PDFs is Challenging</h2>
+
+<p>
+PDF files are not just visual documents — they are structured data containers. When you merge files, you are combining:
+</p>
+
+<ul>
+<li>Object trees</li>
+<li>Cross-reference tables (XREF)</li>
+<li>Incremental updates</li>
+<li>Encryption dictionaries</li>
+</ul>
+
+<h3>Main technical challenges</h3>
+
+<table>
+<tr><th>Issue</th><th>Explanation</th></tr>
+<tr><td>Signature invalidation</td><td>Any modification breaks cryptographic hash</td></tr>
+<tr><td>Different encoding</td><td>Fonts and text layers may conflict</td></tr>
+<tr><td>Image compression mismatch</td><td>Scanned PDFs vary in quality</td></tr>
+<tr><td>Layer conflicts</td><td>Annotations/stamps overlap incorrectly</td></tr>
+</table>
+</section>
+
+<section id="types">
+<h2>Types of Signatures and Stamps in PDFs</h2>
+
+<h3>1. Digital Signatures</h3>
+<p>
+Cryptographic signatures that ensure document authenticity. They rely on hashing the document content.
+</p>
+
+<h3>2. Electronic Signatures (Visual)</h3>
+<p>
+These are images or drawings placed inside the PDF. They are not cryptographically secure but easier to merge.
+</p>
+
+<h3>3. Stamps</h3>
+<p>
+Stamps are annotations such as:
+</p>
+
+<ul>
+<li>Approved</li>
+<li>Confidential</li>
+<li>Draft</li>
+</ul>
+
+<p>
+Technically, they are annotation objects layered above content.
+</p>
+</section>
+
+<section id="scanned">
+<h2>Understanding Scanned PDFs</h2>
+
+<p>
+Scanned PDFs are fundamentally different from normal PDFs. They are composed of images instead of structured text.
+</p>
+
+<h3>Characteristics</h3>
+
+<ul>
+<li>No selectable text</li>
+<li>Large file size</li>
+<li>Dependent on resolution (DPI)</li>
+</ul>
+
+<h3>OCR Layer</h3>
+<p>
+Modern scanned PDFs may include an OCR (Optical Character Recognition) layer that adds hidden text.
+</p>
+</section>
+
+<section id="basic">
+<h2>Basic Methods to Merge PDFs</h2>
+
+<h3>Method 1 — Online Tools</h3>
+<p>
+Tools like SaveFaste allow simple merging:
+</p>
+
+<ol>
+<li>Upload files</li>
+<li>Arrange order</li>
+<li>Download merged PDF</li>
+</ol>
+
+<p>
+Best for:
+</p>
+<ul>
+<li>Non-sensitive documents</li>
+<li>No digital signatures</li>
+</ul>
+
+<h3>Method 2 — Adobe Acrobat</h3>
+<p>
+Professional solution with advanced options:
+</p>
+
+<ul>
+<li>Combine files</li>
+<li>Preserve bookmarks</li>
+<li>Handle annotations</li>
+</ul>
+
+<h3>Method 3 — Command Line</h3>
+
+<pre><code>qpdf --empty --pages file1.pdf file2.pdf -- output.pdf</code></pre>
+
+<p>
+Efficient for developers and automation pipelines.
+</p>
+</section>
+
+<section id="advanced">
+<h2>Advanced Techniques (Professional Level)</h2>
+
+<h3>1. Flattening Before Merge</h3>
+<p>
+Flattening converts annotations and signatures into static content.
+</p>
+
+<pre><code>gs -o flat.pdf -sDEVICE=pdfwrite input.pdf</code></pre>
+
+<p>
+Pros:
+</p>
+<ul>
+<li>No conflicts</li>
+<li>Stable merge</li>
+</ul>
+
+<p>
+Cons:
+</p>
+<ul>
+<li>Signature becomes invalid</li>
+</ul>
+
+<h3>2. Incremental Merge Strategy</h3>
+<p>
+Instead of rewriting files, append new content as incremental updates.
+</p>
+
+<p>
+This preserves original signed sections but is complex to implement.
+</p>
+
+<h3>3. OCR Normalization</h3>
+<p>
+Before merging scanned PDFs, run OCR to standardize text layers.
+</p>
+</section>
+
+<section id="signature">
+<h2>How to Preserve Digital Signatures</h2>
+
+<p>
+Important rule:
+</p>
+
+<div class="note">
+You cannot modify a signed PDF without invalidating the signature.
+</div>
+
+<h3>Solutions</h3>
+
+<ul>
+<li>Merge BEFORE signing</li>
+<li>Use portfolio PDF instead of merge</li>
+<li>Attach PDFs instead of combining</li>
+</ul>
+
+<h3>Alternative: PDF Portfolio</h3>
+<p>
+A container that holds multiple PDFs without altering them.
+</p>
+</section>
+
+<section id="tools">
+<h2>Best Tools for Merging PDFs</h2>
+
+<table>
+<tr><th>Tool</th><th>Use Case</th></tr>
+<tr><td>SaveFaste</td><td>Fast online merging</td></tr>
+<tr><td>Adobe Acrobat</td><td>Professional workflows</td></tr>
+<tr><td>qpdf</td><td>Command line automation</td></tr>
+<tr><td>Ghostscript</td><td>Rewriting PDFs</td></tr>
+</table>
+</section>
+
+<section id="workflow">
+<h2>Professional Workflow (Recommended)</h2>
+
+<ol>
+<li>Validate all PDFs</li>
+<li>Flatten if needed</li>
+<li>Normalize scanned files (OCR)</li>
+<li>Merge using reliable tool</li>
+<li>Apply signature LAST</li>
+</ol>
+
+<p>
+This ensures maximum compatibility and legal validity.
+</p>
+</section>
+
+<section id="errors">
+<h2>Common Problems and Fixes</h2>
+
+<h3>Problem: Signature becomes invalid</h3>
+<p>Cause: File modified after signing</p>
+
+<h3>Problem: Blurry scanned pages</h3>
+<p>Cause: Compression during merge</p>
+
+<h3>Problem: Missing stamps</h3>
+<p>Cause: Annotation layers not merged correctly</p>
+
+</section>
+
+<section id="faq">
+<h2>FAQ</h2>
+
+<div class="faq-item">
+<h3>Can I merge PDFs without breaking signatures?</h3>
+<p>No — unless you use a portfolio or merge before signing.</p>
+</div>
+
+<div class="faq-item">
+<h3>What is the safest method?</h3>
+<p>Merge first, then apply signature.</p>
+</div>
+
+<div class="faq-item">
+<h3>Do scanned PDFs lose quality?</h3>
+<p>Yes if compression is applied incorrectly.</p>
+</div>
+
+</section>
+</main>
+  <footer class="site-footer" aria-label="Footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>About savefaste</h3>
+        <p>
+          Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+        </p>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contactus">Contact Us</a></li>
+          <li><a href="/aboutus">About Us</a></li>
+          <li><a href="/privacypolicy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+          <a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Savefaste. All rights reserved.</span>
+  
+    </div>
+  </footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    avatar.src = user.photoURL || "https://via.placeholder.com/45";
+    avatar.title = user.displayName || user.email;
+
+    // محتوى القائمة
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${user.photoURL || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-weight:bold; font-size:14px; color:#0077cc;"></div>
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <!-- SVG icon -->
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    // toggle عند الضغط على الصورة
+    avatar.onclick = (e) => {
+      e.stopPropagation(); // منع حدث النقر من الانتقال للجسم
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    // إخفاء Dropdown عند النقر خارجها
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>

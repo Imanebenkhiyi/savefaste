@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+.pro-page{
+  max-width:1200px;
+  margin:40px auto;
+  padding:20px;
+}
+
+.top-hero{
+  display:flex;
+  gap:40px;
+  align-items:center;
+  background:#0b1220;
+  color:white;
+  border-radius:28px;
+  padding:60px;
+  overflow:hidden;
+  position:relative;
+}
+
+.top-hero::after{
+  content:'';
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:rgba(59,130,246,0.15);
+  border-radius:50%;
+  right:-200px;
+  top:-200px;
+}
+
+.hero-text{
+  flex:1;
+  position:relative;
+  z-index:2;
+}
+
+.hero-text h1{
+  font-size:50px;
+  line-height:1.2;
+  margin-bottom:20px;
+}
+
+.hero-text p{
+  font-size:18px;
+  line-height:1.9;
+  color:#cbd5e1;
+}
+
+.hero-btn{
+  margin-top:25px;
+  display:inline-block;
+  padding:15px 26px;
+  background:#3b82f6;
+  color:white;
+  text-decoration:none;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+.hero-box{
+  flex:0.6;
+  background:white;
+  color:#111827;
+  border-radius:20px;
+  padding:30px;
+  position:relative;
+  z-index:2;
+}
+
+.hero-box h3{
+  margin-top:0;
+  color:#2563eb;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+  margin-top:50px;
+}
+
+.card{
+  background:white;
+  border-radius:18px;
+  padding:25px;
+  border:1px solid #e5e7eb;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.card h3{
+  color:#1d4ed8;
+}
+
+.section{
+  margin-top:60px;
+}
+
+.section h2{
+  font-size:34px;
+  color:#111827;
+}
+
+.section p{
+  font-size:17px;
+  line-height:1.9;
+  color:#374151;
+}
+
+.steps{
+  margin-top:25px;
+  background:#f1f5f9;
+  padding:30px;
+  border-radius:18px;
+}
+
+.steps ol{
+  line-height:2;
+}
+
+.faq-wrap{
+  margin-top:50px;
+}
+
+.faq-item{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  padding:22px;
+  border-radius:16px;
+  margin-bottom:15px;
+}
+
+.faq-item h3{
+  margin-top:0;
+}
+
+.cta{
+  margin-top:70px;
+  text-align:center;
+  background:linear-gradient(135deg,#1d4ed8,#0b1220);
+  color:white;
+  padding:60px 30px;
+  border-radius:28px;
+}
+
+.cta p{
+  max-width:750px;
+  margin:auto;
+  color:#cbd5e1;
+  line-height:1.9;
+}
+
+.cta a{
+  display:inline-block;
+  margin-top:25px;
+  background:white;
+  color:#1d4ed8;
+  padding:16px 30px;
+  border-radius:12px;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+@media(max-width:900px){
+  .top-hero{
+    flex-direction:column;
+    padding:35px;
+  }
+
+  .hero-text h1{
+    font-size:34px;
+  }
+}
+</style>
+
+<div class="pro-page">
+
+<div class="top-hero">
+
+<div class="hero-text">
+
+<h1>Compress PDF Files for Professional Business Use</h1>
+
+<p>
+Businesses handle thousands of PDF files daily including invoices, contracts, reports, presentations, and documentation. Large PDFs slow down workflows, email delivery, and cloud sharing. This tool helps companies compress PDF files while maintaining professional quality and readability.
+</p>
+
+<a href="/compresspdf" class="hero-btn">
+Compress Business PDFs
+</a>
+
+</div>
+
+<div class="hero-box">
+
+<h3>Why Businesses Use It</h3>
+<ul>
+<li>Faster document sharing</li>
+<li>Reduced storage costs</li>
+<li>Improved workflow speed</li>
+<li>Better email compatibility</li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>Invoices</h3>
+<p>Reduce invoice file sizes for faster sending and archiving.</p>
+</div>
+
+<div class="card">
+<h3>Contracts</h3>
+<p>Optimize legal documents without losing clarity.</p>
+</div>
+
+<div class="card">
+<h3>Reports</h3>
+<p>Make business reports easier to upload and distribute.</p>
+</div>
+
+<div class="card">
+<h3>Presentations</h3>
+<p>Compress slides exported as PDF for smooth sharing.</p>
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>How Compression Helps Workflow</h2>
+
+<p>
+Efficient file handling is important for productivity. Large PDFs slow down communication between departments and clients. Compressing documents improves speed and reduces technical issues during transfer.
+</p>
+
+<div class="steps">
+
+<ol>
+<li>Upload your PDF file</li>
+<li>Start compression process</li>
+<li>Wait for optimization</li>
+<li>Download compressed file instantly</li>
+</ol>
+
+</div>
+
+</div>
+
+<div class="faq-wrap">
+
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq-item">
+<h3>Is this tool safe for business documents?</h3>
+<p>Yes, files are processed securely and deleted automatically after compression.</p>
+</div>
+
+<div class="faq-item">
+<h3>Does compression affect document quality?</h3>
+<p>No, most business PDFs remain clear and readable.</p>
+</div>
+
+<div class="faq-item">
+<h3>Can I use it without registration?</h3>
+<p>Yes, no signup is required.</p>
+</div>
+
+<div class="faq-item">
+<h3>Does it work on mobile devices?</h3>
+<p>Yes, it works on all smartphones and tablets.</p>
+</div>
+
+</div>
+
+<div class="cta">
+
+<h2 style="color:white;">Optimize Your Business PDFs Today</h2>
+
+<p>
+Reduce file size, improve communication speed, and make document management more efficient with SaveFaste PDF compression tools.
+</p>
+
+<a href="/compresspdf">
+Start Compression Now
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

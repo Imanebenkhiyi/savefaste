@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Convert Word to PDF - Professional Tool</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+ 
+ <style>
+    :root {
+  --main-bg: #f5f7fa;
+  --dark-bg: #121212;
+  --primary: #0066ff;
+  --primary-dark: #004cc9;
+  --light: #ffffff;
+  --dark: #1f1f1f;
+  --accent: #00c6ff;
+  --border: #e0e0e0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: var(--main-bg);
+  color: var(--dark);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--light);
+}
+
+.container {
+  max-width: 960px;
+  margin: 60px auto;
+  padding: 2.5rem;
+  background: var(--light);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: background 0.4s;
+}
+
+body.dark-mode .container {
+  background: #1e1e1e;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 2.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 0.6rem;
+}
+
+.page-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2.5rem;
+}
+
+.upload-area {
+  text-align: center;
+  padding: 2.5rem;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  background-color: #fdfdfd;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-area.dragover {
+  background-color: #e0f4ff;
+  border-color: var(--primary);
+}
+
+.upload-area.dark-mode {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+.upload-button {
+  margin-top: 1.5rem;
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--primary);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: var(--primary-dark);
+}
+
+#words {
+  display: none;
+}
+
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.file-list li {
+  background: #eaf1f8;
+  margin: 0.5rem 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.btn-convert {
+  display: none;
+  margin: auto;
+  margin-top: 2rem;
+  padding: 12px 26px;
+  background-color: var(--primary);
+  color: #fff;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.btn-convert:hover {
+  background-color: var(--primary-dark);
+  box-shadow: 0 6px 16px rgba(0, 102, 255, 0.4);
+}
+
+.dark-mode-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.instructions {
+  margin-top: 40px;
+  background: #eef2f7;
+  padding: 1.2rem 1.5rem;
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+}
+
+.instructions h3 {
+  margin-bottom: 0.8rem;
+  color: var(--primary-dark);
+}
+.dark-mode .instructions {
+  background: linear-gradient(135deg, #2b2b2b, #1f1f1f);
+  color: #e0e0e0;
+  border-left-color: var(--primary);
+}
+
+
+.footer-note {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+body.dark-mode .footer-note {
+  color: #aaa;
+}
+
+/* Thumbnails */
+
+#thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 2rem;
+}
+
+.thumbnail-item {
+  width: 110px;
+  text-align: center;
+  position: relative;
+}
+
+.thumbnail-item img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.thumbnail-filename {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.delete-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: crimson;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Info Section */
+
+.info-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin: 4rem auto;
+  padding: 0 1rem;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.info-item {
+  background: #ffffff;
+  color: #333;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  border-top: 4px solid var(--primary);
+}
+
+.info-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(0, 123, 255, 0.2);
+}
+
+.info-item h2 {
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.info-item p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.info-item ul {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.info-item ul li {
+  margin-bottom: 0.7rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.info-item ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+body.dark-mode .info-item {
+  background: #1c1c1c;
+  color: #ccc;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .info-item h2 {
+  color: var(--primary);
+}
+
+body.dark-mode .info-item ul li::before {
+  color: var(--accent);
+}
+
+/* Animations */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+  }
+
+  .info-section {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item h2 {
+    font-size: 1.5rem;
+  }
+
+  .info-item p,
+  .info-item ul li {
+    font-size: 0.95rem;
+  }
+}
+
+ </style>
+</head>
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <div class="container" id="container">
+    <h1 class="page-title">📄 Professional Word to PDF Converter</h1>
+    <p class="page-subtitle">Easily convert your Word documents (DOC, DOCX) to PDF — fast, secure, and free.</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-word fa-2xl" style="color:#2B579A;"></i></p>
+      <p>Click below or drag and drop your Word files</p>
+      <label class="upload-button" for="words"><i class="fa fa-folder-open"></i> Select Word Files</label>
+      <input type="file" id="words" name="words" multiple accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    </div>
+
+    <div id="thumbnails" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;"></div>
+
+    <button id="convertBtn" class="btn-convert" onclick="convertWords()">Convert Now</button>
+
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">Please wait while we securely convert your files...</p>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select <strong>one or more Word documents</strong> using the button above.</li>
+        <li>Once selected, the <strong>Convert Now</strong> button will appear.</li>
+        <li>Click it and wait a few seconds to <strong>download your PDF files</strong>.</li>
+      </ol>
+    </div>
+
+    <div id="result" style="margin-top: 20px;"></div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-item">
+      <h2>What is Word to PDF Conversion?</h2>
+      <p>
+        Word to PDF conversion is the process of transforming Microsoft Word documents (DOC, DOCX) into PDF files. This preserves the layout and formatting, making the documents easy to share and view on any device.
+      </p>
+    </div>
+
+    <div class="info-item">
+      <h2>Benefits of Converting Word to PDF</h2>
+      <ul>
+        <li><strong>Preserves formatting:</strong> Maintains fonts, images, and layouts.</li>
+        <li><strong>Universal compatibility:</strong> PDFs can be viewed on almost any device.</li>
+        <li><strong>Improves security:</strong> PDFs can be password protected and are harder to edit.</li>
+        <li><strong>Professional appearance:</strong> PDFs look polished for sharing and printing.</li>
+      </ul>
+    </div>
+
+    <div class="info-item">
+      <h2>How to Use This Tool</h2>
+      <p>
+        Upload your Word documents using the “Select Files” button or drag and drop them into the upload area. After your files are selected, click “Convert Now” to transform them instantly and download the resulting PDFs.
+      </p>
+      <p>
+        This conversion happens directly in your browser or securely on our server, ensuring your privacy and security.
+      </p>
+    </div>
+  </div>
+
+  <div class="footer-note">
+      This tool works directly in your browser or server-side. Your files are processed securely. 100% privacy guaranteed.
+  </div>
+
+<script>
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('words');
+  const convertBtn = document.getElementById('convertBtn');
+
+  let selectedFiles = [];
+
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+
+  fileInput.addEventListener('change', () => {
+    handleFiles(fileInput.files);
+    fileInput.value = '';
+  });
+
+  function handleFiles(files) {
+    const newFiles = Array.from(files);
+    newFiles.forEach(file => {
+      if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+        selectedFiles.push(file);
+        renderThumbnail(file, selectedFiles.length - 1);
+      }
+    });
+    convertBtn.style.display = selectedFiles.length >= 1 ? 'block' : 'none';
+  }
+
+  function convertWords() {
+    if (selectedFiles.length < 1) {
+      alert('Please select at least one Word file.');
+      return;
+    }
+
+    convertBtn.style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    const formData = new FormData();
+    selectedFiles.forEach(file => {
+      formData.append('words', file);
+    });
+
+    // مثال طلب تحويل، يجب استبداله بواجهة API حقيقية لمعالجة Word to PDF
+    fetch('/wordtopdf/start-convert', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = `wordtopdf/progress?session_id=${data.session_id}`;
+      } else {
+        alert(data.message || 'Failed to start conversion.');
+        convertBtn.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      alert('An error occurred, please try again.');
+      convertBtn.style.display = 'block';
+    });
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+  }
+
+  const thumbnails = document.getElementById('thumbnails');
+
+  function renderThumbnail(file, index) {
+    const item = document.createElement('div');
+    item.classList.add('thumbnail-item');
+
+    // Word icon thumbnail
+    const icon = document.createElement('i');
+    icon.className = 'fa-solid fa-file-word fa-5x';
+    icon.style.color = '#2B579A';
+
+    // Filename label
+    const label = document.createElement('div');
+    label.classList.add('thumbnail-filename');
+    label.textContent = file.name;
+
+    // Delete button
+    const delBtn = document.createElement('button');
+    delBtn.classList.add('delete-btn');
+    delBtn.textContent = '×';
+    delBtn.title = 'Remove file';
+    delBtn.onclick = () => {
+      selectedFiles.splice(index, 1);
+      thumbnails.removeChild(item);
+      updateThumbnails();
+      convertBtn.style.display = selectedFiles.length >= 1 ? 'block' : 'none';
+    };
+
+    item.appendChild(icon);
+    item.appendChild(label);
+    item.appendChild(delBtn);
+
+    thumbnails.appendChild(item);
+  }
+
+  function updateThumbnails() {
+    thumbnails.innerHTML = '';
+    selectedFiles.forEach((file, idx) => {
+      renderThumbnail(file, idx);
+    });
+  }
+</script>
+</body>
+</html>

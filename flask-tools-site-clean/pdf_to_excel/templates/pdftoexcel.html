@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Convert PDF to Excel - Professional Tool</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('pdf_to_excel.static', filename='pdftoexcelcss.css') }}">
+
+  
+</head>
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <div class="container" id="container">
+    <h1 class="page-title"><i class="fa-solid fa-file-excel"></i> Convert PDF to Excel</h1>
+    <p class="page-subtitle">Quickly extract tables and data from PDFs into editable Excel spreadsheets.</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-arrow-up fa-2xl"></i></p>
+      <p>Click below or drag and drop your PDF files</p>
+      <label class="upload-button" for="pdfInput"><i class="fa fa-folder-open"></i> Select PDF Files</label>
+      <input type="file" id="pdfInput" name="pdf" accept="application/pdf" style="display:none;">
+
+    </div>
+    <div id="thumbnailContainer" style="margin-top: 15px;"></div>
+
+    <button id="convertBtn" class="btn-merge">Convert Now</button>
+
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">Please wait while we compress your PDF securely...</p>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select one or more PDF files containing tables.</li>
+        <li>Click the <strong>Convert Now</strong> button to start extraction.</li>
+        <li>Download your converted Excel files instantly.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="info-section">
+
+    <div class="info-item">
+      <h2>What is PDF to Excel Conversion?</h2>
+      <p>It is the process of extracting tabular data and text from PDF documents into Excel format, allowing easy editing and analysis.</p>
+    </div>
+
+    <div class="info-item">
+      <h2>Benefits of PDF to Excel</h2>
+      <ul>
+        <li><strong>Saves time:</strong> Automate data extraction from complex PDF reports.</li>
+        <li><strong>Easy editing:</strong> Work with data in Excel’s familiar environment.</li>
+        <li><strong>Reduces errors:</strong> Minimize manual data entry mistakes.</li>
+        <li><strong>Boosts productivity:</strong> Quickly prepare data for analysis and reporting.</li>
+      </ul>
+    </div>
+
+    <div class="info-item">
+      <h2>Privacy & Security</h2>
+      <p>This conversion happens entirely in your browser, so your files never leave your device. Your data stays private and secure.</p>
+    </div>
+
+  </div>
+<script>
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('pdfInput');
+  const convertBtn = document.getElementById('convertBtn');
+  let selectedFile = null;
+
+  // Drag and Drop Events
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFile(e.dataTransfer.files[0]);
+  });
+
+  // File Input Change Event
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      handleFile(fileInput.files[0]);
+    }
+  });
+
+  // Validate and Handle PDF File
+  function handleFile(file) {
+    if (file && file.type === 'application/pdf') {
+      selectedFile = file;
+      convertBtn.style.display = 'block'; // show convert button
+      renderThumbnail(file);
+    } else {
+      Swal.fire('Invalid File', 'Please select a valid PDF file.', 'warning');
+    }
+  }
+
+  // Render PDF first page thumbnail
+  function renderThumbnail(file) {
+    const fileReader = new FileReader();
+
+    fileReader.onload = function () {
+      const typedarray = new Uint8Array(this.result);
+
+      pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+        pdf.getPage(1).then(page => {
+          const viewport = page.getViewport({ scale: 0.5 });
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+
+          page.render(renderContext).promise.then(() => {
+            const thumbnailContainer = document.getElementById('thumbnailContainer');
+            thumbnailContainer.innerHTML = '';
+            thumbnailContainer.appendChild(canvas);
+          });
+        });
+      }).catch(err => {
+        console.error('Error loading PDF:', err);
+      });
+    };
+
+    fileReader.readAsArrayBuffer(file);
+  }
+
+  // Convert Button Click
+  convertBtn.addEventListener('click', () => {
+    if (!selectedFile) return;
+    convertBtn.style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    const formData = new FormData();
+    formData.append('pdf', selectedFile);
+
+    fetch('/pdftoexcel/start-convert', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('loading-spinner').style.display = 'none';
+      if (data.success) {
+        // Redirect to progress page or show download links
+        window.location.href = `/pdftoexcel/progress?session_id=${data.session_id}`;
+      } else {
+        Swal.fire('Error', data.message || 'Conversion failed.', 'error');
+        convertBtn.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      document.getElementById('loading-spinner').style.display = 'none';
+      Swal.fire('Error', 'Conversion failed.', 'error');
+      convertBtn.style.display = 'block';
+    });
+  });
+
+  // Dark Mode Toggle
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('container').classList.toggle('dark-mode');
+    uploadArea.classList.toggle('dark-mode');
+  }
+</script>
+
+</body>
+</html>

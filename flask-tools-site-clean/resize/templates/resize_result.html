@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resize Result</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #d4edda, #e9f7ef);
+      display: flex;
+      justify-content: center;
+      padding: 30px 15px;
+      min-height: 100vh;
+      margin: 0; 
+    }
+    .container {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 700px;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    h1 {
+      color: #28a745;
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      max-height: 350px;
+      overflow-y: auto;
+      margin-bottom: 30px;
+    }
+    li {
+      margin: 12px 0;
+      font-size: 1.1rem;
+    }
+    a.download-link {
+      color: #28a745;
+      font-weight: bold;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    a.download-link:hover {
+      color: #1e7e34;
+    }
+    .btn-new {
+      background-color: #6c757d;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .btn-new:hover {
+      background-color: #495057;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Images Resized Successfully!</h1>
+    <p>Download your resized images below:</p>
+    <ul>
+      {% for file in resized_files %}
+      <li>
+        <a href="{{ url_for('resize.download_resized', filename=file) }}" class="download-link" download>{{ file }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{{ url_for('resize.serve_resize_html') }}" class="btn-new">Resize More Images</a>
+  </div>
+</body>
+</html>

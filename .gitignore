@@ -1,0 +1,45 @@
+# Environments
+venv/
+venyenv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Uploads & generated files
+uploads/
+uploads_pdf2pp/
+
+
+# Archives
+*.zip
+*.pdf
+*.docx
+
+
+venv/
+venyenv/
+node_modules/
+__pycache__/
+*.pyc
+
+uploads/
+uploads_*/
+outputs/
+output/
+merged/
+signed/
+split_files/
+backup_pdfs/
+compressed_images/
+converted_*/
+resized_images/
+reordered_pdfs/
+
+*.log
+
+
+# System
+.DS_Storeflask-tools-site-clean/
+admine.json
+pdf_to_html/converted/

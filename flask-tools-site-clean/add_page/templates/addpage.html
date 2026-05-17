@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Page to PDF</title>
+  <link rel="stylesheet" href="{{ url_for('add_page.static', filename='addpage.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <div class="container" id="container">
+    <h1 class="page-title"><i class="fa-solid fa-file-circle-plus"></i> Add Page to PDF</h1>
+    <p class="page-subtitle">Select your main PDF and the page number where you want to insert the new file.</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-arrow-up fa-2xl"></i></p>
+      <p>Click below or drag and drop your PDF file</p>
+
+      <!-- Main PDF Input -->
+      <label class="upload-button" for="pdfInput"><i class="fa fa-folder-open"></i> Select Main PDF</label>
+      <input type="file" id="pdfInput" name="main_pdf" accept="application/pdf" style="display:none;">
+
+      <!-- PDF or Image to Insert -->
+      <label class="upload-button" for="insertInput"><i class="fa fa-folder-open"></i> Insert PDF or Image</label>
+      <input type="file" id="insertInput" name="insert_pdf" accept="application/pdf,image/jpeg,image/png" style="display:none;">
+    </div>
+
+    <!-- Previews (Optional) -->
+    <div id="mainThumbnail" style="margin-top: 15px;"></div><div id="insertThumbnail" style="margin-top: 15px;"></div>
+    
+
+    <!-- Input: رقم الصفحة في الملف الرئيسي للإدراج -->
+    <input type="number" name="insert_at" placeholder="Insert at page number (e.g. 1)" min="1" required />
+
+    <!-- Input: صفحات الإدراج من ملف الإدخال -->
+    <input type="text" name="insert_pages" placeholder="Pages to insert (e.g. 1,3,5-7)" required />
+
+    <!-- Add Button -->
+    <button type="button" id="addpageBtn" class="btn-merge" style="display:none">Add Page Now</button>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">
+        Please wait while we process your PDF securely...
+      </p>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select a <strong>PDF file</strong> using the button above or drag it in.</li>
+        <li>Select an image or PDF to insert.</li>
+        <li>Type the page number in the main PDF where you want to insert the pages.</li>
+        <li>Type the pages to insert from the inserted PDF (e.g., 1,3,5-7).</li>
+        <li>Click <strong>Add Page Now</strong>.</li>
+        <li>Download your optimized file in seconds!</li>
+      </ol>
+    </div>
+  </div>
+  <div class="info-section">
+  <div class="info-item">
+    <h2>What is PDF Page Insertion?</h2>
+    <p>
+      PDF page insertion lets you add pages from one PDF into another at any position you choose. This helps you combine documents or insert important information seamlessly.
+    </p>
+  </div>
+  <div class="info-item">
+    <h2>Why Use This Tool?</h2>
+    <ul>
+      <li><strong>Easy to Use:</strong> Just upload your PDFs and select pages to insert.</li>
+      <li><strong>Flexible:</strong> Insert single pages or ranges anywhere in your document.</li>
+      <li><strong>Fast Processing:</strong> Get your updated PDF in seconds.</li>
+      <li><strong>Secure & Private:</strong> Files are processed locally without uploading.</li>
+    </ul>
+  </div>
+  <div class="info-item">
+    <h2>Safe & Secure</h2>
+    <p>
+      All operations are done directly in your browser or server with strict privacy. Your files never leave your control, ensuring your data is safe.
+    </p>
+  </div>
+</div>
+
+
+ <script>
+  const mainInput = document.getElementById('pdfInput');
+  const insertInput = document.getElementById('insertInput');
+  const addpageBtn = document.getElementById('addpageBtn');
+  let mainFile = null;
+  let insertFile = null;
+
+  mainInput.addEventListener('change', () => {
+    if (mainInput.files.length > 0 && mainInput.files[0].type === 'application/pdf') {
+      mainFile = mainInput.files[0];
+      checkReady();
+      renderThumbnail(mainFile, 'mainThumbnail'); 
+      pdfjsLib.getDocument({ data: mainInput.files[0] }).promise
+        .then(pdf => {
+          const pageCountText = document.createElement('p');
+          pageCountText.textContent = `📄 Total Pages: ${pdf.numPages}`;
+          pageCountText.style.marginTop = '10px';
+          pageCountText.style.color = '#333';
+          pageCountText.style.fontWeight = 'bold';
+          const container = document.getElementById('mainThumbnail');
+          container.appendChild(pageCountText);
+        });
+    } else {
+      Swal.fire('Invalid File', 'Please select a valid main PDF file.', 'warning');
+      mainFile = null;
+    }
+  });
+
+  insertInput.addEventListener('change', () => {
+    const file = insertInput.files[0];
+    if (file && (file.type === 'application/pdf' || file.type.startsWith('image/'))) {
+      insertFile = file;
+      checkReady();
+      renderThumbnail(insertFile, 'insertThumbnail');
+    } else {
+      Swal.fire('Invalid File', 'Please select a valid PDF or image.', 'warning');
+      insertFile = null;
+    }
+  });
+
+  function checkReady() {
+    if (mainFile && insertFile) {
+      addpageBtn.style.display = 'block';
+    }
+  }
+
+  addpageBtn.addEventListener('click', () => {
+    const insertAtInput = document.querySelector('input[name="insert_at"]');
+    const insertPagesInput = document.querySelector('input[name="insert_pages"]');
+    const insertAt = insertAtInput ? insertAtInput.value.trim() : '';
+    const insertPages = insertPagesInput ? insertPagesInput.value.trim() : '';
+
+    if (!insertAt || isNaN(insertAt) || parseInt(insertAt) < 1) {
+      Swal.fire('Invalid Input', 'Please enter a valid page number (starting from 1).', 'warning');
+      return;
+    }
+
+    if (!insertPages) {
+      Swal.fire('Invalid Input', 'Please specify pages to insert (e.g., 1,3,5-7).', 'warning');
+      return;
+    }
+
+    addpageBtn.style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    const formData = new FormData();
+    formData.append('main_pdf', mainFile);
+    formData.append('insert_pdf', insertFile);
+    formData.append('insert_at', insertAt);
+    formData.append('insert_pages', insertPages);
+
+    fetch('/addpage/start-add', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('loading-spinner').style.display = 'none';
+      if (data.success) {
+        window.location.href = `/addpage/progress?file=${data.file}`;
+      } else {
+        Swal.fire('Error', data.message || 'Add page failed.', 'error');
+        addpageBtn.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      document.getElementById('loading-spinner').style.display = 'none';
+      Swal.fire('Error', 'Add page failed.', 'error');
+      addpageBtn.style.display = 'block';
+    });
+  });
+
+  function renderThumbnail(file, targetId) {
+    const container = document.getElementById(targetId);
+    container.innerHTML = ''; // تنظيف القديم
+
+    if (file.type === 'application/pdf') {
+      const fileReader = new FileReader();
+      fileReader.onload = function () {
+        const typedarray = new Uint8Array(this.result);
+        pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+          pdf.getPage(1).then(page => {
+            const scale = 0.5;
+            const viewport = page.getViewport({ scale });
+
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            const context = canvas.getContext('2d');
+            const renderContext = { canvasContext: context, viewport };
+
+            page.render(renderContext).promise.then(() => {
+              container.appendChild(canvas);
+            });
+          });
+        }).catch(err => {
+          console.error(err);
+          Swal.fire('Error', 'Could not render PDF thumbnail.', 'error');
+        });
+      };
+      fileReader.readAsArrayBuffer(file);
+    } else if (file.type.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+      img.style.maxWidth = '200px';
+      img.style.borderRadius = '10px';
+      img.style.marginTop = '10px';
+      img.onload = () => URL.revokeObjectURL(img.src);
+      container.appendChild(img);
+    }
+  }
+</script>
+</body>
+</html>

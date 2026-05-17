@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+.about-wrapper{
+  max-width:1100px;
+  margin:40px auto;
+  padding:20px;
+}
+
+.about-hero{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  padding:70px 50px;
+  border-radius:28px;
+  position:relative;
+  overflow:hidden;
+}
+
+.about-hero::after{
+  content:'';
+  position:absolute;
+  width:350px;
+  height:350px;
+  background:rgba(255,255,255,0.08);
+  border-radius:50%;
+  right:-120px;
+  top:-120px;
+}
+
+.about-hero h1{
+  position:relative;
+  z-index:2;
+  font-size:52px;
+  margin-bottom:20px;
+}
+
+.about-hero p{
+  position:relative;
+  z-index:2;
+  max-width:760px;
+  line-height:1.9;
+  font-size:18px;
+  color:#dbeafe;
+}
+
+.about-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+  margin-top:50px;
+}
+
+.about-card{
+  background:white;
+  border-radius:22px;
+  padding:30px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 6px 20px rgba(0,0,0,0.05);
+  transition:0.3s;
+}
+
+.about-card:hover{
+  transform:translateY(-5px);
+}
+
+.about-card h2{
+  margin-top:0;
+  color:#2563eb;
+  font-size:28px;
+}
+
+.about-card p{
+  line-height:1.9;
+  color:#374151;
+  font-size:16px;
+}
+
+.section{
+  margin-top:70px;
+}
+
+.section h2{
+  font-size:38px;
+  margin-bottom:20px;
+  color:#111827;
+}
+
+.section p{
+  line-height:1.9;
+  font-size:17px;
+  color:#374151;
+}
+
+.features{
+  margin-top:35px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
+}
+
+.feature-box{
+  background:#f8fafc;
+  padding:25px;
+  border-radius:18px;
+  border:1px solid #e5e7eb;
+}
+
+.feature-box h3{
+  margin-top:0;
+  color:#1d4ed8;
+}
+
+.feature-box p{
+  line-height:1.8;
+  color:#475569;
+}
+
+.contact-box{
+  margin-top:70px;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:white;
+  border-radius:26px;
+  padding:55px 35px;
+  text-align:center;
+}
+
+.contact-box h2{
+  color:white;
+  margin-bottom:18px;
+}
+
+.contact-box p{
+  max-width:720px;
+  margin:auto;
+  color:#dbeafe;
+  line-height:1.9;
+}
+
+.contact-btn{
+  display:inline-block;
+  margin-top:25px;
+  background:white;
+  color:#2563eb;
+  padding:15px 28px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  margin-top:40px;
+}
+
+.stat{
+  background:white;
+  border-radius:18px;
+  text-align:center;
+  padding:28px;
+  border:1px solid #e5e7eb;
+}
+
+.stat h3{
+  margin:0;
+  font-size:36px;
+  color:#2563eb;
+}
+
+.stat p{
+  margin-top:10px;
+  color:#475569;
+}
+
+@media(max-width:768px){
+
+  .about-hero{
+    padding:45px 25px;
+  }
+
+  .about-hero h1{
+    font-size:38px;
+  }
+
+  .section h2{
+    font-size:30px;
+  }
+
+}
+</style>
+
+<div class="about-wrapper">
+
+<div class="about-hero">
+
+<h1>About SaveFaste</h1>
+
+<p>
+SaveFaste is an online platform designed to simplify PDF management for users around the world. We provide fast, secure, and easy-to-use PDF tools that help people compress, convert, merge, split, and manage documents directly from their browsers without complicated software installations.
+</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h3>24/7</h3>
+<p>Online PDF tools available anytime.</p>
+</div>
+
+<div class="stat">
+<h3>Fast</h3>
+<p>Quick document processing and conversion.</p>
+</div>
+
+<div class="stat">
+<h3>Secure</h3>
+<p>Protected uploads and automatic file deletion.</p>
+</div>
+
+<div class="stat">
+<h3>Free</h3>
+<p>Useful PDF tools without hidden costs.</p>
+</div>
+
+</div>
+
+<div class="about-grid">
+
+<div class="about-card">
+
+<h2>Our Mission</h2>
+
+<p>
+Our mission is to make document management simple and accessible for everyone. We believe users should be able to convert and organize PDF files quickly without technical knowledge, expensive software, or unnecessary complexity.
+</p>
+
+</div>
+
+<div class="about-card">
+
+<h2>Our Vision</h2>
+
+<p>
+We aim to build a modern platform where handling documents online becomes seamless, efficient, and available to anyone with an internet connection, whether for personal, educational, or professional use.
+</p>
+
+</div>
+
+<div class="about-card">
+
+<h2>Our Commitment</h2>
+
+<p>
+We continuously improve our tools to provide reliable performance, mobile compatibility, faster processing, and secure file handling for users worldwide.
+</p>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Why Users Choose SaveFaste</h2>
+
+<p>
+People use SaveFaste because they need practical PDF solutions that work instantly without wasting time. Our platform focuses on speed, simplicity, and user experience across all devices.
+</p>
+
+<div class="features">
+
+<div class="feature-box">
+<h3>Simple Interface</h3>
+<p>
+Easy-to-use tools designed for beginners and professionals alike.
+</p>
+</div>
+
+<div class="feature-box">
+<h3>Secure Processing</h3>
+<p>
+Uploaded documents are handled securely and removed automatically after processing.
+</p>
+</div>
+
+<div class="feature-box">
+<h3>Works Everywhere</h3>
+<p>
+Compatible with desktop computers, tablets, and mobile devices.
+</p>
+</div>
+
+<div class="feature-box">
+<h3>No Installation</h3>
+<p>
+Use PDF tools directly from your browser without downloading software.
+</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Built for Everyday Document Needs</h2>
+
+<p>
+SaveFaste supports students, businesses, freelancers, office workers, and everyday users who regularly work with digital documents. Whether you need to reduce PDF size, convert files, merge documents, or prepare files for sharing, our tools are designed to save time and improve productivity.
+</p>
+
+<p>
+We continue to expand our platform with new PDF utilities and helpful resources to provide a complete online document solution.
+</p>
+
+</div>
+
+<div class="contact-box">
+
+<h2>Contact SaveFaste</h2>
+
+<p>
+We value user feedback and continuously work to improve our platform. If you have questions, suggestions, or support requests, feel free to contact us anytime.
+</p>
+
+<a href="mailto:support@savefaste.com" class="contact-btn">
+support@savefaste.com
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

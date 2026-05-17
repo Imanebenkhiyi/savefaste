@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Convert HEIC to JPG online for free. Fast, secure, and easy HEIC image conversion without installing any software." />
+  <meta name="keywords" content="HEIC to JPG, convert HEIC, free HEIC converter, image converter online" />
+  <meta name="author" content="YourWebsiteName" />
+  <meta name="robots" content="index, follow" />
+  <title>Convert HEIC to JPG Online | Free & Fast</title>
+
+ <style>
+  /* Reset and base */
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(135deg, #e0f7fa, #ffffff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  color: #212529;
+}
+
+.upload-box {
+  background-color: #fff;
+  padding: 48px 36px;
+  max-width: 480px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 123, 255, 0.15);
+  text-align: center;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.upload-box:hover {
+  box-shadow: 0 30px 60px rgba(0, 123, 255, 0.25);
+  transform: translateY(-5px);
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2.6rem;
+  color: #007bff;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+h1::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: #007bff;
+  border-radius: 100px;
+  margin: 12px auto 0;
+}
+
+p {
+  font-size: 1rem;
+  color: #495057;
+  margin-bottom: 36px;
+  line-height: 1.5;
+}
+
+.drop-zone {
+  border: 2.5px dashed #007bff;
+  padding: 40px 20px;
+  border-radius: 18px;
+  background-color: #e9f5ff;
+  color: #004085;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  user-select: none;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+  background-color: #cfe2ff;
+  border-color: #004085;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.btn-submit {
+  margin-top: 36px;
+  background: linear-gradient(135deg, #0056b3, #007bff);
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.btn-submit:hover {
+  background: linear-gradient(135deg, #004085, #0056b3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 86, 179, 0.5);
+}
+
+@media (max-width: 480px) {
+  .upload-box {
+    padding: 36px 24px;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  .drop-zone {
+    font-size: 1rem;
+    padding: 30px 16px;
+  }
+  .btn-submit {
+    padding: 12px 28px;
+    font-size: 1rem;
+  }
+}
+
+ </style>
+</head>
+
+<body>
+  <div class="upload-box">
+    <h1>Convert HEIC to JPG</h1>
+    <p>Fast & Secure Online Converter. Upload HEIC files and get JPG instantly!</p>
+
+    <form action="/convertheic/start-convert" method="POST" enctype="multipart/form-data">
+      <label class="drop-zone" id="drop-zone">
+        Click or Drag & Drop your HEIC images here
+        <input type="file" name="images" id="fileInput" accept=".heic" multiple required />
+      </label>
+
+      <br /><br />
+      <button type="submit" class="btn-submit">Convert to JPG</button>
+    </form>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('fileInput');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+      }
+    });
+  </script>
+</body>
+</html>

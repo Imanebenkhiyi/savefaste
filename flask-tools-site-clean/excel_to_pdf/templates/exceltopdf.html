@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Convert Excel to PDF - Professional Tool</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+  </script>
+  <link rel="stylesheet" href="{{ url_for('excel_to_pdf.static', filename='exceltopdfcss.css') }}">
+</head>
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+  <div class="container" id="container">
+    <h1 class="page-title">📊 Excel to PDF Converter</h1>
+    <p class="page-subtitle">Easily convert your Excel spreadsheets (.xls, .xlsx) to PDF format — fast, secure, and free.</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-arrow-up fa-2xl"></i></p>
+      <p>Click below or drag and drop your Excel files</p>
+      <label class="upload-button" for="excels"><i class="fa fa-folder-open"></i> Select Excel Files</label>
+      <input type="file" id="excels" name="excels" multiple accept=".xls,.xlsx" style="display:none;">
+    </div>
+
+    <ul class="file-list" id="fileList"></ul>
+
+    <button id="convertBtn" class="btn-merge" onclick="convertExcels()">Convert Now</button>
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">Please wait while we convert your Excel files...</p>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select one or more <strong>Excel files (.xls, .xlsx)</strong>.</li>
+        <li>After selecting, the <strong>Convert Now</strong> button will appear.</li>
+        <li>Click it to <strong>download the PDF version</strong> of your Excel sheets.</li>
+      </ol>
+    </div>
+
+    <div class="info-section">
+      <div class="info-item">
+        <h2>Why Convert Excel to PDF?</h2>
+        <p>PDF format preserves your spreadsheet’s layout, making it ideal for sharing, printing, or archiving financial data, tables, and reports.</p>
+      </div>
+
+      <div class="info-item">
+        <h2>Benefits of PDF Conversion</h2>
+        <ul>
+          <li>Universal compatibility for viewing</li>
+          <li>Prevents unintentional edits</li>
+          <li>Professional presentation for reports</li>
+          <li>Reduced file size for sharing</li>
+        </ul>
+      </div>
+
+      <div class="info-item">
+        <h2>Privacy First</h2>
+        <p>This tool works 100% in-browser. Your Excel files never leave your device, ensuring maximum privacy and data safety during conversion.</p>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      This tool works directly in your browser. Your files never leave your device. 100% privacy.
+    </div>
+  </div>
+
+  <script>
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('excels');
+    const convertBtn = document.getElementById('convertBtn');
+    const fileList = document.getElementById('fileList');
+
+    let selectedFiles = [];
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', () => {
+      handleFiles(fileInput.files);
+      fileInput.value = '';
+    });
+
+    function handleFiles(files) {
+      const newFiles = Array.from(files);
+      newFiles.forEach(file => {
+        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+          selectedFiles.push(file);
+        }
+      });
+      renderFileList();
+      convertBtn.style.display = selectedFiles.length > 0 ? 'block' : 'none';
+    }
+
+    function renderFileList() {
+      fileList.innerHTML = '';
+      selectedFiles.forEach((file, index) => {
+        const li = document.createElement('li');
+        li.textContent = file.name;
+        fileList.appendChild(li);
+      });
+    }
+
+     function convertExcels() {
+  if (selectedFiles.length === 0) {
+    alert('Please select at least one Excel file.');
+    return;
+  }
+  convertBtn.style.display = 'none';
+  document.getElementById('loading-spinner').style.display = 'block';
+
+  const formData = new FormData();
+  selectedFiles.forEach(file => {
+    formData.append('excels', file);
+  });
+
+  fetch('exceltopdf/start-convert', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      // تأكد أن بيانات session_id و files موجودة
+      if(data.session_id && data.files && data.files.length > 0){
+        const firstFile = data.files[0];
+        // تحويل إلى صفحة تقدم مع session_id و filename
+        window.location.href = `/exceltopdf/progress?session_id=${data.session_id}&filename=${encodeURIComponent(firstFile)}`;
+      } else {
+        alert('Conversion started but no files received.');
+        convertBtn.style.display = 'block';
+        document.getElementById('loading-spinner').style.display = 'none';
+      }
+    } else {
+      alert(data.message || 'Failed to start conversion.');
+      convertBtn.style.display = 'block';
+      document.getElementById('loading-spinner').style.display = 'none';
+    }
+  })
+  .catch(() => {
+    alert('An error occurred, please try again.');
+    convertBtn.style.display = 'block';
+    document.getElementById('loading-spinner').style.display = 'none';
+  });
+}
+
+
+  </script>
+</body>
+</html>

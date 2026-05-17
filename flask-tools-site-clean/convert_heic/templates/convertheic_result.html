@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Converted Images</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f3f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .result-box {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+    h2 {
+      color: #28a745;
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+    }
+    a.download-link {
+      color: #007bff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    a.download-link:hover {
+      color: #0056b3;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 25px;
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .btn-back:hover {
+      background-color: #495057;
+    }
+  </style>
+</head>
+<body>
+  <div class="result-box">
+    <h2>✅ Conversion Successful!</h2>
+    <p>Click below to download your converted JPG files:</p>
+    <ul>
+      {% for file in converted_files %}
+      <li>
+        <a class="download-link" href="{{ url_for('convert_heic.download_converted', filename=file) }}" download>{{ file }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <a class="btn-back" href="{{ url_for('convert_heic.serve_convert_html') }}">Convert More Images</a>
+  </div>
+</body>
+</html>

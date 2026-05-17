@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rotate PDF</title>
+  <link rel="stylesheet" href="{{ url_for('rotate_page.static', filename='rotatepage.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <div class="container" id="container">
+    <h1 class="page-title"><i class="fa-solid fa-rotate"></i> Rotate PDF</h1>
+    <p class="page-subtitle">Select a PDF and choose rotation angle</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-arrow-up fa-2xl"></i></p>
+      <p>Click below or drag and drop your PDF file</p>
+      <label class="upload-button" for="pdfInput"><i class="fa fa-folder-open"></i> Select PDF File</label>
+      <input type="file" id="pdfInput" name="pdf" accept="application/pdf" style="display:none;">
+    </div>
+
+    <div id="thumbnailContainer" style="margin-top: 15px;"></div>
+
+    <select name="degrees" required>
+      <option value="90">Rotate 90° Clockwise</option>
+      <option value="180">Rotate 180°</option>
+      <option value="270">Rotate 270° Counter-Clockwise</option>
+    </select>
+
+    <!-- ✅ زر التدوير الآن فيه id -->
+    <button id="rotateBtn" type="submit" class="btn-merge" style="display:none">Rotate PDF</button>
+
+    <div class="progress-msg" id="progressMsg"></div>
+
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">Please wait while we rotate your PDF securely...</p>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select a <strong>PDF file</strong> using the button above or drag it in.</li>
+        <li>Click <strong>Rotate PDF</strong> to start the process.</li>
+        <li>Download your rotated file in seconds!</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('pdfInput');
+    const rotateBtn = document.getElementById('rotateBtn');
+    const thumbnailContainer = document.getElementById('thumbnailContainer');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    let selectedFile = null;
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        handleFile(fileInput.files[0]);
+      }
+    });
+
+    function handleFile(file) {
+      if (file && file.type === 'application/pdf') {
+        selectedFile = file;
+        rotateBtn.style.display = 'block';
+        renderThumbnail(file);
+      } else {
+        Swal.fire('Invalid File', 'Please select a valid PDF file.', 'warning');
+      }
+    }
+
+    function renderThumbnail(file) {
+      const fileReader = new FileReader();
+
+      fileReader.onload = function () {
+        const typedarray = new Uint8Array(this.result);
+
+        pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+          pdf.getPage(1).then(page => {
+            const viewport = page.getViewport({ scale: 0.5 });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+
+            page.render(renderContext).promise.then(() => {
+              thumbnailContainer.innerHTML = '';
+              thumbnailContainer.appendChild(canvas);
+            });
+          });
+        }).catch(err => {
+          console.error('Error loading PDF:', err);
+          Swal.fire('Error', 'Failed to render PDF thumbnail.', 'error');
+        });
+      };
+
+      fileReader.readAsArrayBuffer(file);
+    }
+
+    rotateBtn.addEventListener('click', () => {
+      if (!selectedFile) return;
+      rotateBtn.style.display = 'none';
+      loadingSpinner.style.display = 'block';
+
+      const formData = new FormData();
+      formData.append('pdf', selectedFile);
+
+      // ✅ التقاط قيمة الدوران من select
+      const degrees = document.querySelector('select[name="degrees"]').value;
+      formData.append('degrees', degrees);
+
+      fetch('/rotatepage/start-rotate', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        loadingSpinner.style.display = 'none';
+        if (data.success) {
+          window.location.href = `/rotatepage/progress?session_id=${data.session_id}`;
+        } else {
+          Swal.fire('Error', data.message || 'Rotation failed.', 'error');
+          rotateBtn.style.display = 'block';
+        }
+      })
+      .catch(() => {
+        loadingSpinner.style.display = 'none';
+        Swal.fire('Error', 'Rotation failed.', 'error');
+        rotateBtn.style.display = 'block';
+      });
+    });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      document.getElementById('container').classList.toggle('dark-mode');
+      uploadArea.classList.toggle('dark-mode');
+    }
+  </script>
+</body>
+</html>

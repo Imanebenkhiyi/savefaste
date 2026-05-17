@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us – Get in Touch with SaveFaste</title>
+  <meta name="description" content="Have questions, feedback, or suggestions? Contact the SaveFaste team – we’re here to help with anything related to PDF tools.">
+  <style>
+    /* Basic Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f7f9fc;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* Container */
+.contact-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Headings */
+.contact-container h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #004aad;
+}
+
+.contact-container h2 {
+  font-size: 1.3rem;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  color: #004aad;
+}
+
+/* Paragraph */
+.contact-container p {
+  margin-bottom: 20px;
+}
+
+/* Form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.contact-form button {
+  padding: 12px;
+  background-color: #004aad;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+  background-color: #003a8c;
+}
+
+/* Contact Info Section */
+.contact-info p {
+  margin-bottom: 10px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .contact-container {
+    padding: 20px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="contact-container">
+    <h1>Contact Us</h1>
+    <p>If you have any questions, suggestions, or need support regarding our PDF tools, please feel free to reach out. We're here to help you 7 days a week.</p>
+
+    <form action="/contactus/submit-contact" method="POST" class="contact-form">
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="subject">Subject *</label>
+      <input type="text" id="subject" name="subject" required />
+
+      <label for="message">Your Message *</label>
+      <textarea id="message" name="message" rows="6" required></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+
+    <section class="contact-info">
+      <h2>Our Contact Details</h2>
+      <p><strong>Email:</strong> support@savefaste.com</p>
+      <p><strong>Business Hours:</strong> Monday – Sunday, 9:00 AM – 6:00 PM (GMT)</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Convert WEBP to JPG</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #d0f1ff, #f5faff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: #ffffff;
+  padding: 50px 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 550px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+  color: #007bff;
+  margin-bottom: 25px;
+  font-size: 2.2rem;
+  position: relative;
+}
+
+h1::after {
+  content: '';
+  width: 60px;
+  height: 3px;
+  background-color: #007bff;
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 50px;
+}
+
+input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 40px 20px;
+  margin-bottom: 25px;
+  border: 2px dashed #a0a0a0;
+  border-radius: 15px;
+  background-color: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="file"]:hover {
+  background-color: #eefaff;
+  border-color: #007bff;
+}
+
+button {
+  background: linear-gradient(135deg, #007bff, #3399ff);
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  font-size: 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #0056b3, #007bff);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 86, 179, 0.4);
+}
+
+.note {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 15px;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Convert WEBP to JPG</h1>
+    <form action="/convertwebp/start-convert" method="post" enctype="multipart/form-data">
+      <input type="file" name="images" multiple accept=".webp" required>
+      <br>
+      <button type="submit">Convert Images</button>
+    </form>
+    <p class="note">You can upload multiple .webp images at once.</p>
+  </div>
+
+</body>
+</html>

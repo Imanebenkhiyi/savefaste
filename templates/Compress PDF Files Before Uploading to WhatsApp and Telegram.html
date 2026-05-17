@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+.clean-layout{
+  max-width:1150px;
+  margin:40px auto;
+  padding:20px;
+}
+
+.glass-hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:28px;
+  background:linear-gradient(135deg,#f8fafc,#e0f2fe);
+  padding:60px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.08);
+}
+
+.glass-hero::before{
+  content:'';
+  position:absolute;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  background:rgba(37,99,235,0.12);
+  top:-80px;
+  right:-80px;
+}
+
+.glass-hero h1{
+  position:relative;
+  z-index:2;
+  font-size:48px;
+  line-height:1.2;
+  max-width:760px;
+  color:#0f172a;
+}
+
+.glass-hero p{
+  position:relative;
+  z-index:2;
+  margin-top:22px;
+  max-width:760px;
+  line-height:1.9;
+  font-size:18px;
+  color:#334155;
+}
+
+.hero-actions{
+  position:relative;
+  z-index:2;
+  margin-top:30px;
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.primary-btn{
+  background:#2563eb;
+  color:white;
+  padding:15px 24px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.secondary-btn{
+  background:white;
+  color:#111827;
+  padding:15px 24px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+  border:1px solid #d1d5db;
+}
+
+.content-area{
+  margin-top:70px;
+}
+
+.section-title{
+  font-size:34px;
+  margin-bottom:20px;
+  color:#111827;
+}
+
+.text{
+  font-size:17px;
+  line-height:1.95;
+  color:#374151;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+  margin-top:35px;
+}
+
+.modern-card{
+  background:white;
+  border-radius:20px;
+  padding:28px;
+  border:1px solid #e5e7eb;
+  transition:0.3s;
+}
+
+.modern-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.modern-card h3{
+  margin-top:0;
+  color:#1d4ed8;
+}
+
+.big-highlight{
+  margin-top:50px;
+  background:#111827;
+  color:white;
+  padding:45px;
+  border-radius:24px;
+}
+
+.big-highlight p{
+  color:#d1d5db;
+  line-height:1.9;
+}
+
+.compare-table{
+  margin-top:40px;
+  overflow:auto;
+}
+
+.compare-table table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.compare-table th{
+  background:#2563eb;
+  color:white;
+  padding:18px;
+}
+
+.compare-table td{
+  padding:18px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.faq-section{
+  margin-top:60px;
+}
+
+.faq{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:18px;
+}
+
+.faq h3{
+  margin-top:0;
+  color:#111827;
+}
+
+.bottom-cta{
+  margin-top:70px;
+  text-align:center;
+  background:linear-gradient(135deg,#2563eb,#1e40af);
+  padding:60px 30px;
+  border-radius:26px;
+  color:white;
+}
+
+.bottom-cta p{
+  max-width:720px;
+  margin:auto;
+  line-height:1.9;
+  color:#dbeafe;
+}
+
+.bottom-cta a{
+  display:inline-block;
+  margin-top:24px;
+  background:white;
+  color:#2563eb;
+  text-decoration:none;
+  padding:16px 28px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+@media(max-width:768px){
+
+  .glass-hero{
+    padding:35px 25px;
+  }
+
+  .glass-hero h1{
+    font-size:34px;
+  }
+
+}
+</style>
+
+<div class="clean-layout">
+
+<div class="glass-hero">
+
+<h1>Compress PDF Files Before Uploading to WhatsApp and Telegram</h1>
+
+<p>
+Large PDF documents are often difficult to send through messaging apps because of upload restrictions and slower mobile internet connections. This online PDF compression tool helps reduce file size so documents become easier to share through WhatsApp, Telegram, Messenger, and other communication platforms.
+</p>
+
+<div class="hero-actions">
+<a href="/compresspdf" class="primary-btn">
+Compress PDF Now
+</a>
+
+<a href="/mergepdf" class="secondary-btn">
+Explore More PDF Tools
+</a>
+</div>
+
+</div>
+
+<div class="content-area">
+
+<h2 class="section-title">Why Smaller PDFs Are Better for Messaging Apps</h2>
+
+<p class="text">
+Messaging applications are designed for quick communication and fast file sharing. Large PDF documents may take longer to upload, consume mobile data, or fail to send properly on slower networks.
+</p>
+
+<p class="text">
+Compressed PDFs are easier to transfer between devices and improve the overall user experience when sharing work documents, assignments, forms, or reports with friends, teams, or clients.
+</p>
+
+<div class="cards">
+
+<div class="modern-card">
+<h3>Faster Mobile Uploads</h3>
+<p>
+Reduce waiting time when sending files using mobile internet connections.
+</p>
+</div>
+
+<div class="modern-card">
+<h3>Lower Data Usage</h3>
+<p>
+Smaller files help users save mobile data and bandwidth usage.
+</p>
+</div>
+
+<div class="modern-card">
+<h3>Better Sharing Experience</h3>
+<p>
+Compressed PDFs are easier to send and download on phones and tablets.
+</p>
+</div>
+
+</div>
+
+<div class="big-highlight">
+
+<h2 style="color:white;">Designed for Everyday File Sharing</h2>
+
+<p>
+Whether you are sharing school documents, work files, contracts, invoices, or presentations, reducing PDF size helps ensure smoother communication across all devices and messaging applications.
+</p>
+
+</div>
+
+<h2 class="section-title">Common PDF Files Users Compress</h2>
+
+<ul class="text">
+<li>Homework and student assignments</li>
+<li>Business presentations and invoices</li>
+<li>Scanned contracts and official documents</li>
+<li>Digital brochures and catalogs</li>
+<li>Training manuals and reports</li>
+</ul>
+
+<div class="compare-table">
+
+<table>
+
+<tr>
+<th>Without Compression</th>
+<th>With Compression</th>
+</tr>
+
+<tr>
+<td>Slow uploads on mobile</td>
+<td>Faster sharing experience</td>
+</tr>
+
+<tr>
+<td>Higher storage usage</td>
+<td>Reduced file size</td>
+</tr>
+
+<tr>
+<td>Possible upload failures</td>
+<td>Smoother document delivery</td>
+</tr>
+
+<tr>
+<td>Longer download times</td>
+<td>Quick access across devices</td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="faq-section">
+
+<h2 class="section-title">Frequently Asked Questions</h2>
+
+<div class="faq">
+<h3>Can I compress PDFs on my phone?</h3>
+<p>
+Yes, the tool works perfectly on Android and iPhone browsers.
+</p>
+</div>
+
+<div class="faq">
+<h3>Will compressed PDFs still be readable?</h3>
+<p>
+Yes, most documents maintain clear text and readability after optimization.
+</p>
+</div>
+
+<div class="faq">
+<h3>Does this tool require registration?</h3>
+<p>
+No signup or account creation is required.
+</p>
+</div>
+
+<div class="faq">
+<h3>Can I share compressed files on WhatsApp?</h3>
+<p>
+Yes, smaller PDFs are easier to send through WhatsApp and Telegram.
+</p>
+</div>
+
+<div class="faq">
+<h3>Are uploaded files stored permanently?</h3>
+<p>
+No, uploaded documents are automatically deleted after processing.
+</p>
+</div>
+
+</div>
+
+<div class="bottom-cta">
+
+<h2 style="color:white;">Send PDFs Faster Across Messaging Apps</h2>
+
+<p>
+Reduce PDF file size online and make document sharing easier across smartphones, tablets, and desktop devices.
+</p>
+
+<a href="/compresspdf">
+Start Free Compression
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

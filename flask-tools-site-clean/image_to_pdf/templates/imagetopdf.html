@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Image to PDF Converter</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+  body {
+    margin: 0; padding: 0;
+    background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+  }
+
+  .upload-container {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    width: 95%; max-width: 600px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0;
+    color: #333;
+  }
+
+  p {
+    color: #666;
+    font-size: 1rem;
+    margin: 0 0 20px 0;
+  }
+
+  .drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 40px;
+    background: #f9f9f9;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    user-select: none;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+
+  .drop-area.dragover {
+    background: #eef6ff;
+    border-color: #007bff;
+  }
+
+  .drop-area p {
+    margin: 0;
+    color: #555;
+    font-size: 1.2rem;
+    width: 100%;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  .btn-convert {
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+  }
+
+  .btn-convert:hover {
+    background-color: #0056b3;
+  }
+
+  .loading {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #444;
+    display: none;
+    text-align: center;
+  }
+
+  .loading.show {
+    display: block;
+  }
+</style>
+</head>
+<body>
+  <div class="upload-container">
+    <h1>🖼️ Image to PDF Converter</h1>
+    <p>Upload one or more images to generate a PDF file.</p>
+
+    <form id="upload-form">
+      <label for="image-files" class="drop-area" id="drop-area">
+        <p><i class="fa-solid fa-cloud-arrow-up"></i> Drag & Drop Images here or click to browse</p>
+        <input type="file" id="image-files" name="images" accept="image/*" multiple />
+      </label>
+      <button type="submit" class="btn-convert">Convert to PDF</button>
+    </form>
+
+    <div class="loading" id="loading">
+      <i class="fa-solid fa-spinner fa-spin"></i> Converting images, please wait...
+    </div>
+  </div>
+
+<script>
+  const dropArea = document.getElementById('drop-area');
+  const fileInput = document.getElementById('image-files');
+  const form = document.getElementById('upload-form');
+  const loading = document.getElementById('loading');
+
+  let selectedFiles = [];
+
+  dropArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropArea.classList.add('dragover');
+  });
+
+  dropArea.addEventListener('dragleave', () => {
+    dropArea.classList.remove('dragover');
+  });
+
+  dropArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropArea.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+
+  fileInput.addEventListener('change', () => {
+    handleFiles(fileInput.files);
+    fileInput.value = ''; // Reset input
+  });
+
+  function handleFiles(files) {
+    if (files.length === 0) return;
+
+    selectedFiles = Array.from(files).filter(file =>
+      file.type.startsWith('image/')
+    );
+
+    if (selectedFiles.length === 0) {
+      alert('Please upload valid image files.');
+      return;
+    }
+
+    const dt = new DataTransfer();
+    selectedFiles.forEach(file => dt.items.add(file));
+    fileInput.files = dt.files;
+
+    dropArea.querySelector('p').textContent = `${selectedFiles.length} image(s) selected`;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (selectedFiles.length === 0) {
+      alert("Please select image files.");
+      return;
+    }
+
+    loading.classList.add('show');
+
+    const formData = new FormData();
+    selectedFiles.forEach(file => formData.append('images', file));
+
+    try {
+      const response = await fetch('/imagetopdf/start-convert', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.message || 'An error occurred.');
+        loading.classList.remove('show');
+        return;
+      }
+
+      const data = await response.json();
+      if (data.success && data.session_id) {
+        window.location.href = `imagetopdf/progress?session_id=${data.session_id}`;
+      } else {
+        alert(data.message || 'Conversion failed.');
+      }
+    } catch (error) {
+      alert('Upload failed. Please try again.');
+    } finally {
+      loading.classList.remove('show');
+    }
+  });
+</script>
+</body>
+</html>

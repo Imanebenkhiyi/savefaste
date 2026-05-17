@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>Convert HEIC to JPG Online | Free & Fast</title>
+  <meta name="description" content="Convert HEIC to JPG online for free. Fast, secure, and easy HEIC image conversion without installing any software. High-quality HEIC to JPEG conversion in seconds." />
+  <meta name="keywords" content="HEIC to JPG, convert HEIC, free HEIC converter, HEIC to JPEG, image converter online, iPhone photos converter" />
+  <meta name="author" content="YourWebsiteName" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Convert HEIC to JPG Online | Free & Fast" />
+  <meta property="og:description" content="Free online HEIC to JPG converter. Convert your HEIC images to JPEG instantly with high quality and no software installation." />
+  <meta property="og:image" content="https://yourwebsite.com/static/images/heic-to-jpg-og.webp" />
+  <meta property="og:url" content="https://yourwebsite.com/heic-to-jpg" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Convert HEIC to JPG Online | Free & Fast" />
+  <meta name="twitter:description" content="Fast and free HEIC to JPG converter. Upload HEIC images and convert them to JPEG instantly." />
+  <meta name="twitter:image" content="https://yourwebsite.com/static/images/heic-to-jpg-og.webp" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/static/heic_to_jpg/style.css" />
+
+
+ <style>
+  label[for="heicFiles"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, #ffffff, #f4f8ff);
+  border: 1px solid #c9d9ff;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f4fc1;
+  transition: 0.15s ease-in-out;
+  box-shadow: 0 3px 10px rgba(0, 68, 255, 0.05);
+}
+
+label[for="heicFiles"]:hover {
+  background: #eef4ff;
+  border-color: #9bb6ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 68, 255, 0.07);
+}
+
+label[for="heicFiles"]:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(0, 68, 255, 0.04);
+}
+
+/* إخفاء input لأنه سيتم تفعيله عبر label */
+
+
+    :root {
+  --main-bg: #f5f7fa;
+  --dark-bg: #121212;
+  --primary: #0066ff;
+  --primary-dark: #004cc9;
+  --light: #ffffff;
+  --dark: #1f1f1f;
+  --accent: #00c6ff;
+  --border: #e0e0e0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: var(--main-bg);
+  color: var(--dark);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--light);
+}
+
+.container {
+  max-width: 960px;
+  margin: 60px auto;
+  padding: 2.5rem;
+  background: var(--light);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: background 0.4s;
+}
+
+body.dark-mode .container {
+  background: #1e1e1e;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 2.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 0.6rem;
+}
+
+.page-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2.5rem;
+}
+
+.upload-area {
+  text-align: center;
+  padding: 2.5rem;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  background-color: #fdfdfd;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-area.dragover {
+  background-color: #e0f4ff;
+  border-color: var(--primary);
+}
+
+.upload-area.dark-mode {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+.upload-button {
+  margin-top: 1.5rem;
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--primary);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: var(--primary-dark);
+}
+
+#pdfs {
+  display: none;
+}
+
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.file-list li {
+  background: #eaf1f8;
+  margin: 0.5rem 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.btn-merge {
+  display: none;
+  margin: auto;
+  margin-top: 2rem;
+  padding: 12px 26px;
+  background-color: var(--primary);
+  color: #fff;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.btn-merge:hover {
+  background-color: var(--primary-dark);
+  box-shadow: 0 6px 16px rgba(0, 102, 255, 0.4);
+}
+
+.dark-mode-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.instructions {
+  margin-top: 40px;
+  background: #eef2f7;
+  padding: 1.2rem 1.5rem;
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+}
+
+.instructions h3 {
+  margin-bottom: 0.8rem;
+  color: var(--primary-dark);
+}
+.dark-mode .instructions {
+  background: linear-gradient(135deg, #2b2b2b, #1f1f1f);
+  color: #e0e0e0;
+  border-left-color: var(--primary);
+}
+
+
+.footer-note {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+body.dark-mode .footer-note {
+  color: #aaa;
+}
+
+/* Thumbnails */
+
+#thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 2rem;
+}
+
+.thumbnail-item {
+  width: 110px;
+  text-align: center;
+  position: relative;
+}
+
+.thumbnail-item canvas {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.thumbnail-filename {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.delete-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: crimson;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Info Section */
+
+.info-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin: 4rem auto;
+  padding: 0 1rem;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.info-item {
+  background: #ffffff;
+  color: #333;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  border-top: 4px solid var(--primary);
+}
+
+.info-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(0, 123, 255, 0.2);
+}
+
+.info-item h2 {
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.info-item p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.info-item ul {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.info-item ul li {
+  margin-bottom: 0.7rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.info-item ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+body.dark-mode .info-item {
+  background: #1c1c1c;
+  color: #ccc;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .info-item h2 {
+  color: var(--primary);
+}
+
+body.dark-mode .info-item ul li::before {
+  color: var(--accent);
+}
+
+/* Animations */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Header */
+header.site-header {
+  background: #fff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #e03e2f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 1px;
+}
+
+/* Navigation Links */
+nav.nav-links a {
+  margin: 0 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #5c4dff;
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+nav.nav-links a:hover {
+  color: #5c4dff;
+}
+
+nav.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Actions (Login / Sign Up buttons) */
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actions #loginBtn {
+  text-decoration: none;
+  color: #0077cc;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid #0077cc;
+  border-radius: 6px;
+}
+
+.actions .lang-btn {
+  background: #0077cc;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.actions .lang-btn:hover {
+  background: #005bb5;
+}
+
+/* User Menu */
+#userMenu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 220px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#userMenu:hover #dropdown {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#dropdown a {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  background: #f5f5f5;
+  transition: background 0.2s;
+}
+
+#dropdown a:hover {
+  background: #e0f0ff;
+}
+
+#dropdown svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  fill: #0077cc;
+}
+
+/* Responsive: hide nav on small screens */
+@media (max-width: 768px) {
+  nav.nav-links {
+    display: none;
+  }
+  header.site-header {
+    padding: 1rem;
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+  }
+
+  .info-section {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item h2 {
+    font-size: 1.5rem;
+  }
+
+  .info-item p,
+  .info-item ul li {
+    font-size: 0.95rem;
+  }
+}
+
+/* Footer */
+footer.site-footer {
+  background: #1f2937;
+  color: #d1d5db;
+  padding: 3rem 1.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-about,
+.footer-links,
+.footer-social {
+  flex: 1 1 250px;
+}
+
+/* Section Titles */
+.footer-about h3,
+.footer-links h3,
+.footer-social h3 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #a5b4fc;
+}
+
+.footer-about p {
+  line-height: 1.5;
+  color: #9ca3af;
+}
+
+/* Links */
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-links ul li a {
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #a5b4fc;
+}
+
+/* Social Icons */
+.footer-social .social-icons a {
+  display: inline-block;
+  margin-right: 0.75rem;
+  color: #d1d5db;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.footer-social .social-icons a:hover {
+  color: #a5b4fc;
+}
+
+/* Bottom */
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.popup-box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+
+.popup-btn {
+  background: #e53935;
+  padding: 12px 20px;
+  color: #fff;
+  border-radius: 10px;
+  display: inline-block;
+  margin-top: 15px;
+  text-decoration: none;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-social .social-icons a {
+    margin-right: 0.5rem;
+  }
+}
+
+  </style>
+</head>
+<header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header>
+<body>
+  <div class="container" id="container">
+  <h1 class="page-title">🖼️ Convert HEIC to JPG</h1>
+  <p class="page-subtitle">Fast, secure, and easy HEIC to JPG conversion — upload your images and get JPG instantly.</p>
+
+  <div class="upload-area" id="upload-area-heic">
+    <p><i class="fa-solid fa-file-arrow-up fa-2xl"></i></p>
+    <p>Click below or drag and drop your HEIC images</p>
+
+   
+
+    <input type="file" id="heicFiles" name="images" multiple accept=".heic" required>
+  </div>
+
+  <div id="heic-thumbnails" 
+       style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;"></div>
+
+  <form action="/convertheic/start-convert" method="POST" enctype="multipart/form-data">
+    <button type="submit" class="btn-merge">Convert to JPG</button>
+  </form>
+
+  <div id="loading-spinner-heic" style="display:none; text-align:center; margin-top:10px;">
+    <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+    <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">
+      Converting your HEIC images, please wait...
+    </p>
+  </div>
+
+  <div class="instructions">
+    <h3>📋 How to Use:</h3>
+    <ol>
+      <li>Select one or more <strong>.heic</strong> images using the button above or drag & drop.</li>
+      <li>Click <strong>Convert to JPG</strong>.</li>
+      <li>Wait a few seconds to download your converted JPG files.</li>
+    </ol>
+  </div>
+</div>
+<div class="info-section">
+
+  <div class="info-item">
+    <h2>What is HEIC to JPG Conversion?</h2>
+    <p>
+      HEIC to JPG conversion is the process of converting images saved in the HEIC format 
+      — commonly used on iPhones and iPads — into the widely supported JPG format. 
+      This makes your photos easier to view, edit, and share on all devices and platforms.
+    </p>
+  </div>
+
+  <div class="info-item">
+    <h2>Benefits of Converting HEIC to JPG</h2>
+    <ul>
+      <li><strong>Universal compatibility:</strong> JPG works on all phones, computers, apps, and websites.</li>
+      <li><strong>Easier sharing:</strong> JPG images upload smoothly on social media, email, and online services.</li>
+      <li><strong>Better editing support:</strong> JPG is accepted by all major photo editors and tools.</li>
+      <li><strong>Smaller file sizes:</strong> JPG offers good quality with reduced storage needs.</li>
+    </ul>
+  </div>
+
+  <div class="info-item">
+    <h2>How to Use This Tool</h2>
+    <p>
+      To convert your HEIC images, upload one or multiple HEIC files using the “Select Images” button 
+      or drag & drop them into the upload zone. After your photos are selected, click “Convert to JPG” 
+      to process them instantly.
+    </p>
+    <p>
+      Your files are converted securely, and everything happens directly in your browser — ensuring 100% privacy.
+    </p>
+  </div>
+
+</div>
+
+<footer class="site-footer" aria-label="Footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>About savefaste</h3>
+        <p>
+          Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+        </p>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contactus">Contact Us</a></li>
+          <li><a href="/aboutus">About Us</a></li>
+          <li><a href="/privacypolicy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+          <a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Savefaste. All rights reserved.</span>
+  
+    </div>
+  </footer>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('fileInput');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+      }
+    });
+  </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    avatar.src = user.photoURL || "https://via.placeholder.com/45";
+    avatar.title = user.displayName || user.email;
+
+    // محتوى القائمة
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${user.photoURL || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-weight:bold; font-size:14px; color:#0077cc;"></div>
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <!-- SVG icon -->
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    // toggle عند الضغط على الصورة
+    avatar.onclick = (e) => {
+      e.stopPropagation(); // منع حدث النقر من الانتقال للجسم
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    // إخفاء Dropdown عند النقر خارجها
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>

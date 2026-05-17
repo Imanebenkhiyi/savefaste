@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+.neo-page{
+  max-width:1100px;
+  margin:40px auto;
+  padding:20px;
+}
+
+.hero-section{
+  display:grid;
+  grid-template-columns:1.1fr 0.9fr;
+  gap:30px;
+  align-items:center;
+  background:#ffffff;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 10px 35px rgba(0,0,0,0.08);
+}
+
+.hero-content{
+  padding:50px;
+}
+
+.hero-content h1{
+  font-size:46px;
+  line-height:1.2;
+  margin-bottom:20px;
+  color:#0f172a;
+}
+
+.hero-content p{
+  font-size:18px;
+  line-height:1.9;
+  color:#475569;
+}
+
+.hero-image{
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:120px;
+  font-weight:bold;
+}
+
+.main-btn{
+  display:inline-block;
+  margin-top:25px;
+  background:#111827;
+  color:white;
+  text-decoration:none;
+  padding:15px 24px;
+  border-radius:12px;
+  font-weight:600;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  margin-top:40px;
+}
+
+.stat-card{
+  background:#fff;
+  border-radius:18px;
+  padding:28px;
+  text-align:center;
+  box-shadow:0 4px 18px rgba(0,0,0,0.06);
+}
+
+.stat-card h2{
+  margin:0;
+  font-size:36px;
+  color:#2563eb;
+}
+
+.stat-card p{
+  margin-top:10px;
+  color:#475569;
+}
+
+.section{
+  margin-top:60px;
+}
+
+.section h2{
+  font-size:34px;
+  margin-bottom:18px;
+  color:#111827;
+}
+
+.section p{
+  font-size:17px;
+  line-height:1.9;
+  color:#374151;
+}
+
+.timeline{
+  margin-top:35px;
+  border-left:4px solid #2563eb;
+  padding-left:30px;
+}
+
+.timeline-item{
+  margin-bottom:35px;
+  position:relative;
+}
+
+.timeline-item::before{
+  content:'';
+  width:18px;
+  height:18px;
+  background:#2563eb;
+  border-radius:50%;
+  position:absolute;
+  left:-40px;
+  top:8px;
+}
+
+.timeline-item h3{
+  margin-bottom:10px;
+  color:#1e3a8a;
+}
+
+.quote-box{
+  margin-top:40px;
+  background:#eff6ff;
+  border-radius:18px;
+  padding:35px;
+  font-size:22px;
+  line-height:1.8;
+  color:#1e3a8a;
+  font-weight:500;
+}
+
+.faq-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:20px;
+  margin-top:30px;
+}
+
+.faq-card{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  padding:24px;
+}
+
+.faq-card h3{
+  margin-top:0;
+  color:#111827;
+}
+
+.final-box{
+  margin-top:70px;
+  background:#0f172a;
+  border-radius:24px;
+  padding:50px;
+  text-align:center;
+  color:white;
+}
+
+.final-box p{
+  color:#cbd5e1;
+  max-width:700px;
+  margin:auto;
+  line-height:1.9;
+}
+
+.final-box a{
+  display:inline-block;
+  margin-top:25px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  padding:15px 28px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+@media(max-width:850px){
+
+  .hero-section{
+    grid-template-columns:1fr;
+  }
+
+  .hero-content{
+    padding:30px;
+  }
+
+  .hero-content h1{
+    font-size:34px;
+  }
+
+  .hero-image{
+    font-size:70px;
+    padding:40px;
+  }
+
+}
+</style>
+
+<div class="neo-page">
+
+<div class="hero-section">
+
+<div class="hero-content">
+
+<h1>Compress PDF Files for Faster Website Uploads</h1>
+
+<p>
+Website owners, bloggers, businesses, and developers often upload PDF documents to websites for downloads, presentations, manuals, and reports. Large PDF files can slow websites, increase bandwidth usage, and create a poor user experience. Compressing PDFs helps optimize website performance while keeping documents accessible and professional.
+</p>
+
+<a href="/compresspdf" class="main-btn">
+Optimize PDF Files
+</a>
+
+</div>
+
+<div class="hero-image">
+PDF
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-card">
+<h2>Smaller</h2>
+<p>
+Reduce PDF file sizes for faster loading speeds.
+</p>
+</div>
+
+<div class="stat-card">
+<h2>Faster</h2>
+<p>
+Improve download and upload performance across websites.
+</p>
+</div>
+
+<div class="stat-card">
+<h2>Cleaner</h2>
+<p>
+Deliver better browsing experiences to visitors and customers.
+</p>
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Why Website Performance Matters</h2>
+
+<p>
+Modern internet users expect websites to load quickly. Large downloadable PDF files can slow down page speed and negatively affect user experience. Search engines also consider website speed as an important ranking factor.
+</p>
+
+<p>
+Optimizing PDF documents before publishing them online helps websites remain lightweight and responsive while reducing server load and storage usage.
+</p>
+
+<div class="quote-box">
+“Optimized documents create faster websites, smoother downloads, and better user experiences.”
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>How PDF Compression Helps Website Owners</h2>
+
+<div class="timeline">
+
+<div class="timeline-item">
+<h3>Faster Download Speeds</h3>
+<p>
+Visitors can access documents more quickly, especially on mobile devices and slower internet connections.
+</p>
+</div>
+
+<div class="timeline-item">
+<h3>Reduced Hosting Costs</h3>
+<p>
+Smaller files consume less bandwidth and reduce storage usage on hosting servers.
+</p>
+</div>
+
+<div class="timeline-item">
+<h3>Better Mobile Experience</h3>
+<p>
+Compressed files open more smoothly on smartphones and tablets without long waiting times.
+</p>
+</div>
+
+<div class="timeline-item">
+<h3>Improved SEO Performance</h3>
+<p>
+Faster websites generally provide stronger user engagement and improved search visibility.
+</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Typical Files Users Compress</h2>
+
+<ul>
+<li>PDF catalogs and brochures</li>
+<li>Company reports and presentations</li>
+<li>Educational PDFs and eBooks</li>
+<li>Technical manuals and documentation</li>
+<li>Marketing materials for websites</li>
+</ul>
+
+</div>
+
+<div class="section">
+
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq-grid">
+
+<div class="faq-card">
+<h3>Will compressed PDFs still look professional?</h3>
+<p>
+Yes, most standard documents maintain excellent readability after optimization.
+</p>
+</div>
+
+<div class="faq-card">
+<h3>Can compression improve website speed?</h3>
+<p>
+Smaller downloadable files reduce loading pressure and improve user experience.
+</p>
+</div>
+
+<div class="faq-card">
+<h3>Does this tool work online?</h3>
+<p>
+Yes, the entire compression process happens directly in the browser.
+</p>
+</div>
+
+<div class="faq-card">
+<h3>Can I compress PDFs from mobile devices?</h3>
+<p>
+Yes, the tool supports Android, iPhone, tablets, and desktop devices.
+</p>
+</div>
+
+<div class="faq-card">
+<h3>Are uploaded files secure?</h3>
+<p>
+Yes, uploaded files are automatically deleted after processing.
+</p>
+</div>
+
+<div class="faq-card">
+<h3>Do I need software installation?</h3>
+<p>
+No installation is required. Everything works online instantly.
+</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="final-box">
+
+<h2 style="color:white;">Optimize PDFs Before Publishing Online</h2>
+
+<p>
+Reduce file size, improve download speed, and create a better browsing experience for your website visitors using SaveFaste PDF compression tools.
+</p>
+
+<a href="/compresspdf">
+Compress PDF Online
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

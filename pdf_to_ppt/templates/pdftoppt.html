@@ -1,0 +1,335 @@
+<!-- احفظ الملف باسم: pdftoppt.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- SEO Title -->
+  <title>PDF to PowerPoint Converter — Free & High-Quality PDF to PPT Tool</title>
+
+  <!-- SEO Description -->
+  <meta name="description" 
+        content="Convert PDF to PowerPoint instantly with our free online tool. High-quality PDF to PPT conversion with accurate text, images, and layout extraction. Fast, secure, and easy to use.">
+
+  <!-- SEO Keywords -->
+  <meta name="keywords" 
+        content="pdf to ppt, convert pdf to powerpoint, pdf to pptx, online pdf to ppt, free pdf to ppt converter, presentation converter">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://savefaste.com/pdf-to-powerpoint/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/static/favicon.png" />
+
+  <!-- Open Graph (Facebook / Social) -->
+  <meta property="og:title" content="PDF to PowerPoint Converter — Free Online Tool" />
+  <meta property="og:description" 
+        content="Convert PDF pages into editable PowerPoint slides in seconds. Free, fast, and secure PDF to PPT converter." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://savefaste.com/pdf-to-powerpoint/" />
+  <meta property="og:image" content="/static/og-image.png" />
+      <link rel="icon" type="image/png" href="/static/favicon.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PDF to PowerPoint Converter — Free & Accurate" />
+  <meta name="twitter:description" 
+        content="Fast and high-quality PDF to PPT conversion with perfect layout preservation." />
+  <meta name="twitter:image" content="/static/og-image.png" />
+
+  <!-- External Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- CSS File -->
+<link rel="stylesheet" href="{{ url_for('pdf_to_ppt.static', filename='pdftopptcss.css') }}">
+</head>
+<header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header>
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <div class="container" id="container">
+    <h1 class="page-title">📤 Convert PDF to PowerPoint</h1>
+    <p class="page-subtitle">Instantly convert your PDF files into fully editable PowerPoint presentations.</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-arrow-up fa-2xl"></i></p>
+      <p>Click below or drag and drop your PDF files</p>
+      <label class="upload-button" for="pdfs"><i class="fa fa-folder-open"></i> Select PDF Files</label>
+      <input type="file" id="pdfs" name="pdfs" accept="application/pdf">
+    </div>
+
+    <div id="thumbnails" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;"></div>
+
+    <button id="convertBtn" class="btn-merge" onclick="convertPDF()">Convert Now</button>
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">Please wait while we convert your PDF...</p>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select <strong>a PDF file</strong> using the button above.</li>
+        <li>Once selected, the <strong>Convert Now</strong> button will appear.</li>
+        <li>Click it and wait a few seconds to <strong>download your PowerPoint</strong>.</li>
+      </ol>
+    </div>
+ </div>
+    <div class="info-section">
+      <div class="info-item">
+        <h2>Why Convert PDFs to PowerPoint?</h2>
+        <p>
+          This tool lets you convert PDF files into editable PowerPoint presentations, making it easy to reuse your content in a visual format.
+        </p>
+      </div>
+
+      <div class="info-item">
+        <h2>Benefits of PDF to PPT</h2>
+        <ul>
+          <li>Editable content in slides</li>
+          <li>Ideal for presentations</li>
+          <li>Maintains layout and formatting</li>
+          <li>Time-saving and efficient</li>
+        </ul>
+      </div>
+    </div>
+
+  <footer class="site-footer" aria-label="Footer">
+ <div class="footer-container">
+<div class="footer-about">
+<h3>About savefaste</h3>
+<p>
+ Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+</p>
+</div>
+<div class="footer-links">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/contactus">Contact Us</a></li>
+<li><a href="/aboutus">About Us</a></li>
+<li><a href="/privacypolicy">Privacy Policy</a></li>
+<li><a href="/terms">Terms of Service</a></li>
+</ul>
+</div>
+<div class="footer-social">
+<h3>Follow Us</h3>
+<div class="social-icons">
+<a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+<a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+<a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2025 Savefaste. All rights reserved.</span>
+</div>
+</footer> 
+ 
+
+<script>
+const uploadArea = document.getElementById('upload-area');
+const fileInput = document.getElementById('pdfs');
+const convertBtn = document.getElementById('convertBtn');
+let selectedFile = null;
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFile(e.dataTransfer.files[0]);
+});
+
+fileInput.addEventListener('change', () => {
+    handleFile(fileInput.files[0]);
+    fileInput.value = '';
+});
+
+function handleFile(file) {
+    if (file && file.type === 'application/pdf') {
+        selectedFile = file;
+        renderThumbnail(file);
+        convertBtn.style.display = 'block';
+    }
+}
+
+function convertPDF() {
+    if (!selectedFile) {
+        alert('Please select a PDF file.');
+        return;
+    }
+
+    convertBtn.style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    const formData = new FormData();
+    formData.append('pdf', selectedFile);
+
+    fetch('/pdftoppt/convert', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('loading-spinner').style.display = 'none';
+
+        if (data.success) {
+            // 🔥 الانتقال مباشرة إلى صفحة النجاح
+            window.location.href = `/pdftoppt/progress?pptx_filename=${data.pptx_filename}`;
+        } else {
+            alert(data.message || 'Conversion failed.');
+            convertBtn.style.display = 'block';
+        }
+    })
+    .catch(() => {
+        document.getElementById('loading-spinner').style.display = 'none';
+        alert('Conversion failed.');
+        convertBtn.style.display = 'block';
+    });
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('container').classList.toggle('dark-mode');
+    uploadArea.classList.toggle('dark-mode');
+}
+
+function renderThumbnail(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const typedarray = new Uint8Array(e.target.result);
+        pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+            pdf.getPage(1).then(page => {
+                const scale = 1;
+                const viewport = page.getViewport({ scale });
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                const context = canvas.getContext('2d');
+                page.render({ canvasContext: context, viewport }).promise.then(() => {
+                    const container = document.getElementById('thumbnails');
+                    container.innerHTML = '';
+                    container.appendChild(canvas);
+                });
+            });
+        });
+    };
+    reader.readAsArrayBuffer(file);
+}
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    avatar.src = user.photoURL || "https://via.placeholder.com/45";
+    avatar.title = user.displayName || user.email;
+
+    // محتوى القائمة
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${user.photoURL || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-weight:bold; font-size:14px; color:#0077cc;"></div>
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <!-- SVG icon -->
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    // toggle عند الضغط على الصورة
+    avatar.onclick = (e) => {
+      e.stopPropagation(); // منع حدث النقر من الانتقال للجسم
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    // إخفاء Dropdown عند النقر خارجها
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>

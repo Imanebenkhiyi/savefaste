@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Compress Image</title>
+<style>
+  /* Base styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  margin: 0;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #343a40;
+}
+
+.dark-mode body {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+.container {
+  background: #fff;
+  padding: 40px 35px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark-mode .container {
+  background: #1e1e1e;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 25px;
+  font-weight: 700;
+  color: #007bff;
+}
+
+.dark-mode .container h1 {
+  color: #66aaff;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: left;
+  color: #343a40;
+}
+
+.dark-mode label {
+  color: #cfcfcf;
+}
+
+input[type="file"] {
+  padding: 10px 12px;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #007bff;
+  background: transparent;
+  transition: border-color 0.3s ease;
+}
+
+input[type="file"]:hover,
+input[type="file"]:focus {
+  border-color: #0056b3;
+  outline: none;
+}
+
+input[type="number"] {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  color: #343a40;
+  transition: border-color 0.3s ease;
+}
+
+input[type="number"]:focus {
+  border-color: #0056b3;
+  outline: none;
+}
+
+.dark-mode input[type="file"],
+.dark-mode input[type="number"] {
+  border-color: #66aaff;
+  color: #e0e0e0;
+  background: #2a2a2a;
+}
+
+.dark-mode input[type="file"]:hover,
+.dark-mode input[type="file"]:focus,
+.dark-mode input[type="number"]:focus {
+  border-color: #3399ff;
+  outline: none;
+}
+
+button[type="submit"] {
+  padding: 14px 0;
+  font-size: 1.2r
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Compress Image</h1>
+    <form action="{{ url_for('compress.start_compress') }}" method="POST" enctype="multipart/form-data">
+      <label for="images">Select images (JPG, PNG, etc.):</label>
+      <input type="file" name="images" id="images" multiple required />
+
+      <label for="quality">Quality (10-95):</label>
+      <input type="number" id="quality" name="quality" min="10" max="95" value="75" />
+
+      <button type="submit">Compress</button>
+    </form>
+  </div>
+</body>
+</html>

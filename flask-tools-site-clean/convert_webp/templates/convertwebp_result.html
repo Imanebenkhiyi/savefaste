@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WEBP to JPG Result</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #d0f1ff, #f5faff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      width: 90%;
+      max-width: 650px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      color: #007bff;
+      margin-bottom: 15px;
+      font-size: 2.3rem;
+      position: relative;
+    }
+
+    h1::after {
+      content: '';
+      width: 60px;
+      height: 3px;
+      background-color: #007bff;
+      display: block;
+      margin: 12px auto 0;
+      border-radius: 50px;
+    }
+
+    p {
+      color: #555;
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      margin: 18px 0;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #333;
+    }
+
+    li::before {
+      content: '✅';
+      font-size: 1rem;
+      color: #28a745;
+    }
+
+    a.download-link {
+      text-decoration: none;
+      color: white;
+      background: linear-gradient(135deg, #007bff, #3399ff);
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    a.download-link:hover {
+      background: linear-gradient(135deg, #0056b3, #007bff);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 86, 179, 0.35);
+    }
+
+    .btn-new {
+      margin-top: 35px;
+      display: inline-flex;
+      background-color: #6c757d;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-new:hover {
+      background-color: #495057;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(73, 80, 87, 0.4);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🎉 Conversion Successful!</h1>
+    <p>Your WEBP files have been converted to JPG. Download them below:</p>
+
+    <ul>
+      {% for file in converted_files %}
+        <li>
+          <a class="download-link" href="{{ url_for('convert_webp.download_converted', filename=file) }}" download>
+            📥 Download {{ file }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('convert_webp.serve_convert_html') }}" class="btn-new">
+      🔄 Convert New Images
+    </a>
+  </div>
+</body>
+</html>

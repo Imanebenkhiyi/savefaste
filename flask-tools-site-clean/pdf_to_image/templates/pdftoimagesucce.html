@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDF to Image - Success</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #fceabb, #ffffff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 50px 40px;
+      width: 95%;
+      max-width: 700px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2.3rem;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .header p {
+      color: #555;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+    .success-icon {
+      color: #28a745;
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    .file-info {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+    .file-info p {
+      font-size: 1rem;
+      margin: 8px 0;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      font-size: 1rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .btn-download {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .btn-download:hover {
+      background-color: #0056b3;
+    }
+    .btn-new {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-new:hover {
+      background-color: #495057;
+    }
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
+    .btn-delete:hover {
+      background-color: #a71d2a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 PDF Converted to Images!</h1>
+      <p>Your image files are ready for download.</p>
+    </div>
+
+    <div class="success-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+
+    <div class="file-info">
+      <p><strong>📄 Original PDF:</strong> {{ filename }}</p>
+      <p><strong>🖼️ Output:</strong> Multiple .png or .jpg files</p>
+    </div>
+
+    <div class="buttons">
+      <a href="{{ download_link }}" class="btn btn-download" download>
+        <i class="fa-solid fa-download"></i> Download Images (ZIP)
+      </a>
+      <a href="/pdftoimage" class="btn btn-new">
+        <i class="fa-solid fa-file-image"></i> Convert Another
+      </a>
+      <a href="#" class="btn btn-delete" id="delete-btn">
+        <i class="fa-solid fa-trash"></i> Delete Files
+      </a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    const deleteBtn = document.getElementById('delete-btn');
+    deleteBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = urlParams.get('session_id');
+
+      if (!sessionId) {
+        Swal.fire('Error', 'Session ID not found in the URL.', 'error');
+        return;
+      }
+
+      const confirm = await Swal.fire({
+        title: 'Are you sure?',
+        text: "All extracted images will be permanently deleted.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete them',
+        cancelButtonText: 'Cancel'
+      });
+
+      if (confirm.isConfirmed) {
+        try {
+          const res = await fetch(`/pdftoimage/delete/${sessionId}`, {
+            method: 'DELETE'
+          });
+          const data = await res.json();
+
+          if (data.success) {
+            await Swal.fire('Deleted!', 'Your files have been removed.', 'success');
+            window.location.href = '/pdftoimage';
+          } else {
+            Swal.fire('Error', data.message || 'Deletion failed.', 'error');
+          }
+        } catch (err) {
+          Swal.fire('Error', 'Server error while deleting the files.', 'error');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Compress PDF - Professional Tool</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="{{ url_for('compress_pdf.static', filename='compress.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <div class="container" id="container">
+    <h1 class="page-title">📉 Compress Your PDF</h1>
+    <p class="page-subtitle">Reduce PDF file size while maintaining quality. Fast, private & free!</p>
+
+    <div class="upload-area" id="upload-area">
+      <p><i class="fa-solid fa-file-arrow-up fa-2xl"></i></p>
+      <p>Click below or drag and drop your PDF file</p>
+      <label class="upload-button" for="pdfInput"><i class="fa fa-folder-open"></i> Select PDF File</label>
+      <input type="file" id="pdfInput" name="pdf" accept="application/pdf" style="display:none;">
+    </div>
+      <div id="thumbnailContainer" style="margin-top: 15px;"></div>
+
+    <button id="compressBtn" class="btn-merge" style="display:none">Compress Now</button>
+
+    <div id="loading-spinner" style="display:none; text-align:center; margin-top:10px;">
+      <i class="fa fa-spinner fa-spin fa-2x"></i>
+      <p style="font-size: 1rem; margin-top: 10px; color: #e20b0b;">Please wait while we compress your PDF securely...</p>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 How to Use:</h3>
+      <ol>
+        <li>Select a <strong>PDF file</strong> using the button above or drag it in.</li>
+        <li>Click <strong>Compress Now</strong> to start the process.</li>
+        <li>Download your optimized file in seconds!</li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="info-section">
+    <div class="info-item">
+      <h2>What is PDF Compression?</h2>
+      <p>
+        PDF compression reduces the file size of your documents by optimizing images and removing redundant data. This makes it easier to store, send, and share your files without losing quality.
+      </p>
+    </div>
+    <div class="info-item">
+      <h2>Why Use This Tool?</h2>
+      <ul>
+        <li><strong>Quick Results:</strong> Compress your PDFs in seconds.</li>
+        <li><strong>Privacy First:</strong> Files never leave your browser.</li>
+        <li><strong>No Quality Loss:</strong> Smart algorithms preserve content integrity.</li>
+        <li><strong>Free Forever:</strong> No limits or hidden fees.</li>
+      </ul>
+    </div>
+    <div class="info-item">
+      <h2>Safe & Secure</h2>
+      <p>
+        All compression happens locally in your browser. No data is uploaded to a server, ensuring complete privacy for sensitive documents.
+      </p>
+    </div>
+  </div>  
+
+
+  <div class="footer-note">
+    This tool works directly in your browser. Your files never leave your device. 100% privacy.
+  </div>
+
+<script>
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('pdfInput');
+  const compressBtn = document.getElementById('compressBtn');
+  let selectedFile = null;
+
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFile(e.dataTransfer.files[0]);
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      handleFile(fileInput.files[0]);
+    }
+  });
+
+  function handleFile(file) {
+    if (file && file.type === 'application/pdf') {
+      selectedFile = file;
+      compressBtn.style.display = 'block';
+    } else {
+      Swal.fire('Invalid File', 'Please select a valid PDF file.', 'warning');
+    }
+    renderThumbnail(file);
+  }
+   function renderThumbnail(file) {
+  const fileReader = new FileReader();
+
+  fileReader.onload = function() {
+    const typedarray = new Uint8Array(this.result);
+
+    pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+      pdf.getPage(1).then(page => {
+        const viewport = page.getViewport({ scale: 0.5 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+
+        page.render(renderContext).promise.then(() => {
+          const thumbnailContainer = document.getElementById('thumbnailContainer');
+          thumbnailContainer.innerHTML = '';  // امسح أي محتوى قديم
+          thumbnailContainer.appendChild(canvas);
+        });
+      });
+    }).catch(err => {
+      console.error('Error loading PDF:', err);
+      // ممكن تعرض رسالة خطأ للمستخدم لو حبيت
+    });
+  };
+
+  fileReader.readAsArrayBuffer(file);
+}
+
+
+  compressBtn.addEventListener('click', () => {
+    if (!selectedFile) return;
+    compressBtn.style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    const formData = new FormData();
+    formData.append('pdf', selectedFile);
+
+    fetch('/compresspdf/start-compress', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('loading-spinner').style.display = 'none';
+      if (data.success) {
+               window.location.href = `/compresspdf/done?filename=${data.file}`;
+      } else {
+        Swal.fire('Error', data.message || 'Compression failed.', 'error');
+        compressBtn.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      document.getElementById('loading-spinner').style.display = 'none';
+      Swal.fire('Error', 'Compression failed.', 'error');
+      compressBtn.style.display = 'block';
+    });
+  });
+
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('container').classList.toggle('dark-mode');
+    uploadArea.classList.toggle('dark-mode');
+  }
+</script>
+</body>
+</html>

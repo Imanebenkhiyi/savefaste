@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+.minimal-wrapper{
+  max-width: 980px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.top-banner{
+  background: #f3f7ff;
+  border: 1px solid #dbeafe;
+  border-radius: 20px;
+  padding: 45px;
+  text-align: center;
+}
+
+.top-banner h1{
+  font-size: 42px;
+  margin-bottom: 15px;
+  color: #0f172a;
+}
+
+.top-banner p{
+  max-width: 760px;
+  margin: auto;
+  font-size: 18px;
+  line-height: 1.9;
+  color: #475569;
+}
+
+.quick-btn{
+  display: inline-block;
+  margin-top: 25px;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.content-section{
+  margin-top: 50px;
+}
+
+.content-section h2{
+  font-size: 30px;
+  margin-bottom: 18px;
+  color: #111827;
+}
+
+.content-section p{
+  font-size: 17px;
+  line-height: 1.9;
+  color: #374151;
+}
+
+.highlight{
+  background: #111827;
+  color: white;
+  padding: 30px;
+  border-radius: 18px;
+  margin-top: 30px;
+}
+
+.highlight p{
+  color: #d1d5db;
+}
+
+.two-columns{
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.box{
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+}
+
+.box h3{
+  margin-top: 0;
+  color: #2563eb;
+}
+
+.steps-list{
+  counter-reset: step;
+  margin-top: 25px;
+}
+
+.step-item{
+  position: relative;
+  padding-left: 60px;
+  margin-bottom: 25px;
+}
+
+.step-item::before{
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  background: #2563eb;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.faq-card{
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+  background: #fafafa;
+}
+
+.cta-final{
+  text-align: center;
+  margin-top: 60px;
+  padding: 45px;
+  background: linear-gradient(135deg,#2563eb,#1d4ed8);
+  color: white;
+  border-radius: 20px;
+}
+
+.cta-final a{
+  display: inline-block;
+  margin-top: 20px;
+  background: white;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+@media(max-width:768px){
+
+  .top-banner{
+    padding: 30px 20px;
+  }
+
+  .top-banner h1{
+    font-size: 30px;
+  }
+
+}
+</style>
+
+<div class="minimal-wrapper">
+
+<div class="top-banner">
+
+<h1>Reduce PDF Size for Email Attachments</h1>
+
+<p>
+Many email providers limit attachment sizes, making it difficult to send large PDF documents. This online PDF compression tool helps reduce file size quickly so documents become easier to attach, upload, and share through email services without losing readability.
+</p>
+
+<a href="/compresspdf" class="quick-btn">
+Compress PDF for Email
+</a>
+
+</div>
+
+<div class="content-section">
+
+<h2>Why Email Services Reject Large PDFs</h2>
+
+<p>
+PDF files containing images, graphics, presentations, or scanned pages can easily exceed email attachment limits. Gmail, Outlook, and other providers often block files that are too large.
+</p>
+
+<p>
+Instead of splitting documents manually or lowering quality using desktop software, users can compress PDFs online in seconds using browser-based tools.
+</p>
+
+<div class="highlight">
+
+<h2 style="color:white;">Quick Online Compression</h2>
+
+<p>
+The compression process works entirely online and requires no installation. Upload your file, reduce its size, and download the optimized PDF instantly.
+</p>
+
+</div>
+
+</div>
+
+<div class="content-section">
+
+<h2>Common Situations Where Compression Helps</h2>
+
+<div class="two-columns">
+
+<div class="box">
+<h3>Business Documents</h3>
+<p>
+Reduce invoice, report, and contract sizes before sending them to clients or teams.
+</p>
+</div>
+
+<div class="box">
+<h3>University Assignments</h3>
+<p>
+Students can compress homework and presentations before submitting them online.
+</p>
+</div>
+
+<div class="box">
+<h3>Job Applications</h3>
+<p>
+Optimize resumes and portfolio PDFs to meet recruiter attachment requirements.
+</p>
+</div>
+
+<div class="box">
+<h3>Cloud Uploads</h3>
+<p>
+Smaller PDFs upload faster to Google Drive, Dropbox, and other storage platforms.
+</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="content-section">
+
+<h2>How to Compress a PDF for Email</h2>
+
+<div class="steps-list">
+
+<div class="step-item">
+<h3>Select Your PDF File</h3>
+<p>
+Choose the document you want to optimize directly from your device.
+</p>
+</div>
+
+<div class="step-item">
+<h3>Start Compression</h3>
+<p>
+The system automatically reduces unnecessary file size while maintaining readability.
+</p>
+</div>
+
+<div class="step-item">
+<h3>Download the Smaller File</h3>
+<p>
+Save the optimized PDF and attach it to your email immediately.
+</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="content-section">
+
+<h2>Benefits of Compressing PDFs Online</h2>
+
+<ul>
+<li>Faster email delivery</li>
+<li>Reduced upload time</li>
+<li>Better cloud storage management</li>
+<li>No software installation required</li>
+<li>Compatible with all major devices and browsers</li>
+</ul>
+
+</div>
+
+<div class="content-section">
+
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq-card">
+<strong>Will compression reduce quality?</strong>
+<p>
+Most standard PDF files remain highly readable after optimization.
+</p>
+</div>
+
+<div class="faq-card">
+<strong>Can I compress PDFs on my phone?</strong>
+<p>
+Yes, the tool works on Android and iPhone devices.
+</p>
+</div>
+
+<div class="faq-card">
+<strong>Do I need to install software?</strong>
+<p>
+No, everything works directly in your browser.
+</p>
+</div>
+
+<div class="faq-card">
+<strong>Is this compression tool free?</strong>
+<p>
+Yes, PDF compression is available online for free.
+</p>
+</div>
+
+<div class="faq-card">
+<strong>Are uploaded files secure?</strong>
+<p>
+Yes, files are automatically removed after processing.
+</p>
+</div>
+
+</div>
+
+<div class="cta-final">
+
+<h2 style="color:white;">Make PDFs Easy to Share</h2>
+
+<p>
+Reduce PDF file size online and send documents faster through email and cloud platforms.
+</p>
+
+<a href="/compresspdf">
+Start Compressing Now
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

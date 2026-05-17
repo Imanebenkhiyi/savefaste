@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SaveFaste - Log In</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:#eef2f7;display:flex;justify-content:center;align-items:center;min-height:100vh;transition:.4s;}
+body.dark{background:#0f0f11;}
+.login-wrapper{width:95%;max-width:1150px;background:#fff;border-radius:20px;display:flex;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.12);}
+body.dark .login-wrapper{background:#18181c;box-shadow:0 20px 60px rgba(255,255,255,0.05);}
+.login-left{width:50%;padding:60px 45px;display:flex;flex-direction:column;justify-content:center;}
+.login-left h1{text-align:center;font-size:38px;font-weight:800;color:#0066cc;margin-bottom:30px;}
+body.dark .login-left h1{color:#48a3ff;}
+.social-buttons{display:flex;flex-direction:column;gap:12px;margin-bottom:30px;}
+.social-btn{padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:14px;transition:.25s;}
+.social-btn:hover{transform:scale(1.03);}
+.btn-google{background:#fff;border:1px solid #ddd;color:#444;}
+.btn-facebook{background:#1877f2;color:white;}
+.login-form label{font-weight:600;margin-bottom:5px;display:block;color:#333;}
+body.dark .login-form label{color:#ddd;}
+.login-form input{width:100%;padding:15px;margin-bottom:18px;border-radius:12px;border:1px solid #ccc;font-size:15px;background:white;transition:.3s;}
+.login-form input:focus{border-color:#007bff;box-shadow:0 0 0 3px rgba(0,123,255,0.15);}
+body.dark .login-form input{background:#222;border-color:#444;color:#eee;}
+.login-form button{width:100%;padding:16px;background:#0066cc;color:white;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;transition:.25s;}
+.login-form button:hover{background:#0052a3;transform:translateY(-2px);}
+.signup-link{text-align:center;margin-top:15px;font-size:14px;}
+.signup-right{width:50%;background:linear-gradient(135deg,#0066cc,#003f7f);color:white;padding:60px 35px;display:flex;flex-direction:column;justify-content:center;text-align:center;}
+.signup-right h2{font-size:32px;font-weight:800;margin-bottom:15px;}
+.signup-right p{font-size:17px;opacity:.95;line-height:1.6;}
+.signup-right img{margin-top:40px;width:100%;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,0.25);}
+.dark-btn{position:absolute;top:25px;right:30px;padding:10px 16px;border-radius:10px;background:#000;color:white;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:.3s;}
+.dark-btn:hover{opacity:.8;}
+
+.msg-box{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:16px;
+  font-weight:600;
+  display:none;
+}
+
+.msg-error{background:#fee2e2;color:#991b1b;}
+.msg-success{background:#e6f9ee;color:#056839;}
+
+.reset-link{
+  margin-top:10px;
+  font-size:14px;
+  text-align:center;
+}
+.reset-link a{
+  font-weight:700;
+  cursor:pointer;
+  color:#0066cc;
+}
+
+@media(max-width:900px){
+  .login-wrapper{flex-direction:column;}
+  .login-left,.signup-right{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<button class="dark-btn" onclick="document.body.classList.toggle('dark')">🌙 / ☀️</button>
+
+<div class="login-wrapper">
+  <div class="login-left">
+    <h1>Log In</h1>
+
+    <div id="msgBox" class="msg-box"></div>
+
+    <div class="social-buttons">
+      <button class="social-btn btn-google" onclick="loginWithGoogle()">Continue with Google</button>
+    </div>
+
+    <form id="login-form" class="login-form">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="you@example.com" required>
+
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+
+      <button type="submit">Log In</button>
+    </form>
+
+    
+
+    <div class="signup-link">Don't have an account? <a href="/signup">Create Account</a></div>
+  </div>
+
+  <div class="signup-right">
+    <h2>Welcome Back</h2>
+    <p>Access all your documents, tools and AI-powered PDF features.</p>
+    <img src="/static/ss.png" alt="">
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  sendEmailVerification,
+  GoogleAuthProvider, 
+  FacebookAuthProvider, 
+  signInWithPopup 
+} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+  storageBucket: "savefaste-6b548.firebasestorage.app",
+  messagingSenderId: "619367589434",
+  appId: "1:619367589434:web:0546526637f19ab02af703",
+  measurementId: "G-G11857WHKV"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const msgBox = document.getElementById("msgBox");
+
+function showError(msg){
+  msgBox.style.display="block";
+  msgBox.className="msg-box msg-error";
+  msgBox.textContent=msg;
+}
+
+function showSuccess(msg){
+  msgBox.style.display="block";
+  msgBox.className="msg-box msg-success";
+  msgBox.textContent=msg;
+}
+
+// Google Login
+window.loginWithGoogle = function(){
+  signInWithPopup(auth, new GoogleAuthProvider())
+    .then(()=>window.location.href="/")
+    .catch(err=>showError(err.code));
+};
+
+// Facebook Login
+window.loginWithFacebook = function(){
+  signInWithPopup(auth, new FacebookAuthProvider())
+    .then(()=>window.location.href="/")
+    .catch(err=>showError(err.code));
+};
+
+// Email Login
+document.getElementById("login-form").addEventListener("submit", async(e)=>{
+  e.preventDefault();
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+
+  try{
+    const userCred = await signInWithEmailAndPassword(auth,email,password);
+
+    // تحقق من تفعيل الإيميل
+    if (!userCred.user.emailVerified){
+      await sendEmailVerification(userCred.user);
+      showError("Your email is not verified — A new verification link was sent to your inbox.");
+      return;
+    }
+
+    window.location.href="/";
+    
+  }catch(error){
+    if(error.code==="auth/invalid-login-credentials"){
+      showError("Incorrect email or password.");
+    }else{
+      showError(error.code.replace("auth/","").replace(/-/g," "));
+    }
+  }
+});
+
+// Reset Password
+window.resetPassword = function(){
+  const email = document.getElementById("email").value;
+  if(!email) return showError("Please enter your email first.");
+
+  sendPasswordResetEmail(auth,email)
+    .then(()=>showSuccess("Password reset link sent to your email."))
+    .catch(err=>showError(err.code));
+}
+</script>
+
+</body>
+</html>

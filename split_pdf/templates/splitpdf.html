@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- SEO Optimized Title -->
+  <title>Advanced Split PDF Tool – Easily Split and Manage PDF Files</title>
+
+  <!-- Meta Description (over 70 words for better SEO) -->
+  <meta name="description" content="Advanced Split PDF Tool is a professional and easy-to-use solution for splitting large PDF files into separate pages or extracting specific sections. Quickly divide your PDFs while maintaining high quality and security. Perfect for business, education, or personal use, this tool helps you efficiently organize, manage, and process your PDF documents without any software installation. Enjoy fast, accurate, and reliable PDF splitting today.">
+
+  <!-- Keywords -->
+  <meta name="keywords" content="Split PDF, PDF Splitter, PDF Tool, Divide PDF, Extract PDF Pages, Manage PDF Files, PDF Editor, PDF Processing, PDF Utility">
+
+  <!-- Author -->
+  <meta name="author" content="Your Company Name">
+
+  <!-- Open Graph (Social Media Preview) -->
+  <meta property="og:title" content="Advanced Split PDF Tool – Easily Split PDF Files">
+  <meta property="og:description" content="Split large PDF files into separate pages or extract specific sections with Advanced Split PDF Tool. Fast, secure, and accurate PDF management solution for personal or professional use.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.savefaste.com">
+  <meta property="og:image" content="https://www.savefaste.com/static/favicon.png">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('split_pdf.static', filename='split.css') }}">
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- JavaScript Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ url_for('split_pdf.static', filename='favicon.ico') }}" type="image/x-icon">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Split PDF Online",
+    "operatingSystem": "Web",
+    "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "PDFSoftware",
+    "url": "https://www.savefaste.com/splitpdf",
+    "description": "Split PDF Online is a fast, secure, and easy-to-use tool for dividing large PDF files into separate pages or extracting specific sections. Perfect for business, students, and personal use.",
+    "logo": "https://www.savefaste.com/static/favicon.png",
+    "screenshot": "https://www.savefaste.com/static/ss.png",
+    "keywords": "Split PDF, PDF Splitter, Divide PDF, Extract Pages, Online PDF Editor",
+    "author": {
+      "@type": "Organization",
+      "name": "savefaste"
+    },
+    "softwareVersion": "1.0",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "url": "https://www.savefaste.com/splitpdf"
+    }
+  }
+  </script>
+</head>
+
+<body>
+   <header class="site-header">
+     <div class="logo">
+  <img src="/static/favicon.png" alt="SaveFaste">
+  SaveFaste
+</div>
+
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/mergepdf">Merge PDF</a>
+      <a href="/splitpdf">Split PDF</a>
+      <a href="/compresspdf">Compress PDF</a>
+      <a href="/blog">blog</a>
+      
+    </nav>
+  <div class="actions" style="display: flex; gap: 10px; align-items: center;">
+  <a href="/login" id="loginBtn" style="text-decoration: none; color: #0077cc; font-weight: 500; padding: 10px 16px; border: 1px solid #0077cc; border-radius: 6px;">Login</a>
+  <button class="lang-btn" onclick="window.location.href='/signup'" id="signupBtn" style="padding: 10px 16px; background: #0077cc; color: #fff; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
+   
+  <div id="userMenu" style="display:none; position: relative;">
+  <img id="userAvatar" src="" alt="User Avatar" class="avatar" style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+  <div id="dropdown" style="display:none; position:absolute; top:50px; right:0; background:#fff; border:1px solid #ccc; border-radius:8px; padding:10px; min-width:200px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index:1000;">
+    <!-- المحتوى الديناميكي سيتم إضافته هنا -->
+  </div>
+</div>
+
+</div>
+
+  </div>
+</div>
+
+  </header>
+  <main>
+  <div class="container" id="container">
+    <h1>Split Your PDF File</h1>
+    <p class="description">Upload your PDF and select how you want to split it.</p>
+
+    <!-- Drag & Drop Area -->
+    <div class="drop-zone" id="upload-area">
+      <span class="drop-message">Drag & Drop your PDF here or click to select</span>
+      <input type="file" name="pdf" id="pdfs" accept="application/pdf" />
+    </div>
+  <div id="thumbnailContainer" style="margin-top: 15px;"></div>
+
+    <!-- Options -->
+    <label for="pages">Pages (e.g. 1-3,5):</label>
+    <input type="text" name="pages" id="pages" placeholder="e.g. 1-3,5,7" />
+
+    <label for="splitByN">Split every N pages:</label>
+    <input type="number" name="split_n" id="splitByN" min="1" />
+    <!-- Split Each Page Separately -->
+    <label for="splitEach">Split each page separately:</label>
+    <input type="checkbox" id="splitEach" />
+
+    <!-- Compress Output -->   
+    <label for="compress">Compress output:</label>
+    <input type="checkbox" id="compress" />
+
+    <!-- Output File Name -->
+    <label for="output_name">Output file name (optional):</label>
+    <input type="text" id="output_name" placeholder="e.g. my-split-file" />
+
+
+    <button type="button" id="submitBtn" onclick="splitPDF()" style="display: none;">Split PDF</button>
+
+    <!-- Preview & Details -->
+    <div id="fileDetails" class="hidden">
+      <p><strong>File:</strong> <span id="fileName"></span></p>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div id="progress" class="hidden">
+      <p>Processing... Please wait.</p>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section hidden" id="downloadSection">
+      <a href="#" class="download-btn" id="downloadLink">Download Result</a>
+    </div>
+  </div>
+
+  <!-- Info Section -->
+  <div class="info-section">
+    <div class="info-item">
+      <h2>What is PDF Splitting?</h2>
+      <p>PDF splitting is the process of dividing one PDF into multiple smaller parts...</p>
+    </div>
+    <div class="info-item">
+      <h2>Benefits of Splitting PDFs</h2>
+      <ul>
+        <li><strong>Focus on specific pages:</strong> Extract only what you need.</li>
+        <li><strong>Reduce file size:</strong> Make large files more manageable.</li>
+        <li><strong>Improve sharing:</strong> Send only necessary parts.</li>
+        <li><strong>Organize better:</strong> Separate sections into multiple documents.</li>
+      </ul>
+    </div>
+    <div class="info-item">
+      <h2>How to Use This Tool</h2>
+      <p>Upload your PDF file, choose how you'd like to split it — by page numbers, by splitting each page, or every N pages. Click "Split Now" and get your result instantly.</p>
+    </div>
+  </div>
+</main>
+  <footer class="site-footer" aria-label="Footer">
+ <div class="footer-container">
+<div class="footer-about">
+<h3>About savefaste</h3>
+<p>
+ Savefaste offers a comprehensive PDF solution integrating traditional tools and advanced AI capabilities for seamless document management.
+</p>
+</div>
+<div class="footer-links">
+<h3>Quick Links</h3>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/contactus">Contact Us</a></li>
+<li><a href="/aboutus">About Us</a></li>
+<li><a href="/privacypolicy">Privacy Policy</a></li>
+<li><a href="/terms">Terms of Service</a></li>
+</ul>
+</div>
+<div class="footer-social">
+<h3>Follow Us</h3>
+<div class="social-icons">
+<a href="https://facebook.com/savefaste" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+<a href="https://twitter.com/savefaste" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+<a href="https://linkedin.com/company/savefaste" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://instagram.com/savefaste" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2025 Savefaste. All rights reserved.</span>
+</div>
+</footer>  
+
+  <!-- === JavaScript Logic === -->
+ <script>
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('pdfs');
+  const submitBtn = document.getElementById('submitBtn');
+  const fileDetails = document.getElementById('fileDetails');
+  const fileNameSpan = document.getElementById('fileName');
+  const progress = document.getElementById('progress');
+
+  let selectedFile = null;
+
+  // ✅ النقر على المنطقة لفتح اختيار الملفات
+  uploadArea.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  // Drag & Drop events
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    handleFile(file);
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    handleFile(file);
+  });
+
+  function handleFile(file) {
+  if (!file || file.type !== 'application/pdf') {
+    Swal.fire('Invalid file', 'Please upload a valid PDF.', 'error');
+    return;
+  }
+
+  selectedFile = file;
+  fileNameSpan.textContent = file.name;
+  fileDetails.classList.remove('hidden');
+  submitBtn.style.display = 'block';
+
+  // هنا عرض أول صفحة من ملف PDF
+  renderThumbnail(file);
+}
+
+  function renderThumbnail(file) {
+  const fileReader = new FileReader();
+
+  fileReader.onload = function() {
+    const typedarray = new Uint8Array(this.result);
+
+    pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+      pdf.getPage(1).then(page => {
+        const viewport = page.getViewport({ scale: 0.5 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+
+        page.render(renderContext).promise.then(() => {
+          const thumbnailContainer = document.getElementById('thumbnailContainer');
+          thumbnailContainer.innerHTML = '';  // امسح أي محتوى قديم
+          thumbnailContainer.appendChild(canvas);
+        });
+      });
+    }).catch(err => {
+      console.error('Error loading PDF:', err);
+      // ممكن تعرض رسالة خطأ للمستخدم لو حبيت
+    });
+  };
+
+  fileReader.readAsArrayBuffer(file);
+}
+
+
+  function splitPDF() {
+    if (!selectedFile) {
+      Swal.fire('No file', 'Please select a PDF file first.', 'warning');
+      return;
+    }
+
+    submitBtn.style.display = 'none';
+    progress.classList.remove('hidden');
+
+    const formData = new FormData();
+    formData.append('pdf', selectedFile);
+    formData.append('pages', document.getElementById('pages').value);
+    formData.append('split_each', document.getElementById('splitEach').checked);
+    formData.append('split_n', document.getElementById('splitByN').value);
+    formData.append('compress', document.getElementById('compress').checked);
+    formData.append('output_name', document.getElementById('output_name').value);
+
+    fetch('/splitpdf/start-split', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = `/splitpdf/progress?session_id=${data.session_id}`;
+      } else {
+        Swal.fire('Error', data.message || 'Failed to split PDF.', 'error');
+        submitBtn.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      Swal.fire('Error', 'An error occurred, please try again.', 'error');
+      submitBtn.style.display = 'block';
+    })
+    .finally(() => {
+      progress.classList.add('hidden');
+    });
+  }
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8YY7HiPimpm_4E9pxUuID6DgZnl_WkAE",
+  authDomain: "savefaste-6b548.firebaseapp.com",
+  projectId: "savefaste-6b548",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const userMenu = document.getElementById("userMenu");
+  const avatar = document.getElementById("userAvatar");
+  const dropdown = document.getElementById("dropdown");
+
+  if(user){
+    loginBtn.style.display = "none";
+    signupBtn.style.display = "none";
+    userMenu.style.display = "flex";
+
+    avatar.src = user.photoURL || "https://via.placeholder.com/45";
+    avatar.title = user.displayName || user.email;
+
+    // محتوى القائمة
+    dropdown.innerHTML = `
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="${user.photoURL || 'https://via.placeholder.com/60'}" style="width:60px; height:60px; border-radius:50%; border:1px solid #ccc; margin-bottom:6px;">
+        <div style="font-weight:bold; font-size:14px; color:#0077cc;"></div>
+        <div style="font-size:13px; color:#555;">${user.email}</div>
+      </div>
+      <a href="/parametre" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; margin-bottom:4px; background:#f5f5f5;">
+        <!-- SVG icon -->
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Paramètres du compte
+      </a>
+      <a href="#" id="logoutBtn" style="display:flex; align-items:center; padding:8px 12px; text-decoration:none; color:#333; border-radius:8px; background:#f5f5f5;">
+        <svg style="width:20px; height:20px; margin-right:8px;" fill="#0077cc" viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zM20 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        Se déconnecter
+      </a>
+    `;
+
+    // toggle عند الضغط على الصورة
+    avatar.onclick = (e) => {
+      e.stopPropagation(); // منع حدث النقر من الانتقال للجسم
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+
+    // إخفاء Dropdown عند النقر خارجها
+    document.addEventListener("click", (e) => {
+      if(!userMenu.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+  } else {
+    loginBtn.style.display = "inline-block";
+    signupBtn.style.display = "inline-block";
+    userMenu.style.display = "none";
+  }
+});
+</script>
+<script src="/static/js/protect.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resize Images</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #c1e1ec, #f0f9ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0; padding: 0;
+    }
+    .container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 450px;
+      text-align: center;
+    }
+    h1 {
+      color: #007bff;
+      margin-bottom: 25px;
+    }
+    input[type="file"] {
+      margin: 15px 0;
+    }
+    input[type="number"] {
+      width: 120px;
+      padding: 8px;
+      margin: 10px 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Resize Your Images</h1>
+    <form action="{{ url_for('resize.start_resize') }}" method="POST" enctype="multipart/form-data">
+      <input type="file" name="images" accept="image/*" multiple required />
+      <br />
+      <label>
+        Width (px):
+        <input type="number" name="width" min="1" required />
+      </label>
+      <label>
+        Height (px):
+        <input type="number" name="height" min="1" required />
+      </label>
+      <br />
+      <button type="submit">Resize Images</button>
+    </form>
+  </div>
+</body>
+</html>

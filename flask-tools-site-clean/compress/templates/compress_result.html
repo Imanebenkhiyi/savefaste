@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Compression Result</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #e0f7fa; padding: 40px; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 15px #ccc; text-align: center; }
+    h1 { color: #007bff; margin-bottom: 25px; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 12px 0; font-size: 1.1rem; }
+    a.download-link { text-decoration: none; color: #007bff; font-weight: bold; }
+    a.download-link:hover { color: #0056b3; }
+    .btn-new { margin-top: 30px; display: inline-block; background-color: #6c757d; color: white; padding: 12px 28px; border-radius: 10px; text-decoration: none; font-weight: bold; }
+    .btn-new:hover { background-color: #495057; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Compression Successful!</h1>
+    <p>Your images have been compressed. Download below:</p>
+    <ul>
+      {% for file in compressed_files %}
+      <li>
+        <a href="{{ url_for('compress.download_compressed', filename=file) }}" class="download-link" download>{{ file }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{{ url_for('compress.serve_compress_html') }}" class="btn-new">Compress More Images</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Split PDF Tool</title>
+  <link rel="stylesheet" href="/static/css/splitpdf.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Split Your PDF File</h1>
+    <p class="description">Upload your PDF and select how you want to split it.</p>
+
+    <!-- Drag & Drop Area -->
+    <div class="drop-zone" id="dropZone">
+      <span class="drop-message">Drag & Drop your PDF here or click to select</span>
+      <input type="file" name="pdf_file" id="pdfInput" accept="application/pdf">
+    </div>
+
+    <!-- Preview & Details -->
+    <div id="fileDetails" class="hidden">
+      <p><strong>File:</strong> <span id="fileName"></span></p>
+      <p><strong>Total Pages:</strong> <span id="totalPages"></span></p>
+    </div>
+
+    <!-- Split Options -->
+    <form id="splitForm" method="POST" action="/split-pdf" enctype="multipart/form-data">
+      <input type="hidden" name="pdf_file" id="hiddenPdfFile">
+
+      <label for="pages">Pages (e.g. 1-3,5):</label>
+      <input type="text" name="pages" id="pages" placeholder="e.g. 1-3,5,7">
+
+      <label for="splitEach">Split each page separately:</label>
+      <input type="checkbox" name="split_each" id="splitEach">
+
+      <label for="splitByN">Split every N pages:</label>
+      <input type="number" name="split_n" id="splitByN" min="1">
+
+      <label for="compress">Compress output file:</label>
+      <input type="checkbox" name="compress" id="compress">
+
+      <label for="output_name">Output file name:</label>
+      <input type="text" name="output_name" id="output_name" placeholder="e.g. myfile_split.pdf">
+
+      <button type="submit" id="submitBtn">Split PDF</button>
+    </form>
+
+    <!-- Progress Indicator -->
+    <div id="progress" class="hidden">
+      <p>Processing... Please wait.</p>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section hidden" id="downloadSection">
+      <a href="#" class="download-btn" id="downloadLink">Download Result</a>
+    </div>
+  </div>
+
+  <script>
+    // Drag & Drop logic
+    const dropZone = document.getElementById('dropZone');
+    const pdfInput = document.getElementById('pdfInput');
+    const fileNameSpan = document.getElementById('fileName');
+    const totalPagesSpan = document.getElementById('totalPages');
+    const fileDetails = document.getElementById('fileDetails');
+    const downloadSection = document.getElementById('downloadSection');
+    const downloadLink = document.getElementById('downloadLink');
+
+    dropZone.addEventListener('click', () => pdfInput.click());
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('hover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('hover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('hover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type === 'application/pdf') {
+        pdfInput.files = e.dataTransfer.files;
+        fileNameSpan.textContent = file.name;
+        fileDetails.classList.remove('hidden');
+        // TODO: use JS to get PDF total pages (optional with PDF.js)
+      } else {
+        Swal.fire('Invalid file', 'Please upload a valid PDF.', 'error');
+      }
+    });
+
+    pdfInput.addEventListener('change', () => {
+      const file = pdfInput.files[0];
+      if (file && file.type === 'application/pdf') {
+        fileNameSpan.textContent = file.name;
+        fileDetails.classList.remove('hidden');
+        // TODO: use JS to get PDF total pages (optional)
+      }
+    });
+
+    // Handle form submit
+    document.getElementById('splitForm').addEventListener('submit', e => {
+      document.getElementById('progress').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
